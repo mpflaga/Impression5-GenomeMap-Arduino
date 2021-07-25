@@ -16,19 +16,19 @@
 
 #ifndef IFDEBUG_LED
 #define IFDEBUG_LED(...) ((void)((DEBUG_LEVEL_LED) && (__VA_ARGS__, 0)))
-#define DEBUG_LEVEL_LED 11 // set to 1 to compile in Serial Debug prints
+#define DEBUG_LEVEL_LED 1 // set to 1 to compile in Serial Debug prints
 #endif
 
 #ifndef LEDdisplay_h
 #define LEDdisplay_h
 
 #include <Adafruit_NeoPixel.h>
-#include "MigrationGame.h"
+#include "MigrationData.h"
 
 /**
- * \class LEDdisplay
- * \brief Interface Driver to the f NeoPixels in 7 segment arrangement.
- */
+   \class LEDdisplay
+   \brief Interface Driver to the f NeoPixels in 7 segment arrangement.
+*/
 class LEDdisplay {
 
   public:

@@ -1,4 +1,3 @@
-#include "MigrationData.h"
 
 #ifndef IFDEBUG
 #define IFDEBUG(...) ((void)((DEBUG_LEVEL) && (__VA_ARGS__, 0)))
@@ -11,6 +10,9 @@
 
 #ifndef MigrationGame_h
 #define MigrationGame_h
+
+#include "MigrationData.h"
+#include "LEDdisplay.h"
 
 typedef enum  {
   NO_PLANT_SELECTED,
@@ -32,7 +34,7 @@ typedef enum  {
   WINNER_START,
   WINNER_END,
   ABANDONED
-  } state_m; //enum state_m
+} state_m; //enum state_m
 
 static const char stateStr[][35] PROGMEM = {
   "NO_PLANT_SELECTED",
@@ -61,33 +63,32 @@ class MigrationGame {
 
     //Stream* _serial;
     StreamEx* _serial;
-    
-  public:
-
-    typedef struct {
-      int plant[4];  // current Plant is index 0
-      int hopPos;
-      int stepPos;
-      int region[4]; // index 0 is buffered, index 1 will be current.
-    } History;
-
+    LEDdisplay* _ledDisplay;
+    Adafruit_NeoPixel* _strip;
+    int prv_region;
+    uint32_t ledNextMillis;
+    uint32_t ledStartMillis;
+    uint32_t ledDelayMillis;
     bool reverse;
     int ledSegPos;
     int ledpos;
     int startPos;
     int endPos;
     int currentBrightness;
-    uint32_t ledNextMillis;
-    uint32_t ledStartMillis;
-    uint32_t ledDelayMillis;
 
-    History history;
+  public:
+
+    int plant[4];  // current Plant is index 0
+    int hopPos;
+    int stepPos;
+    int region[4]; // index 0 is buffered, index 1 will be current.
     state_m gameState[10];
-  
+    state_m prv_gameState;
+
     MigrationGame();
     ~MigrationGame();
-    void begin();
-    void begin(Stream &serial);
+    void begin(Adafruit_NeoPixel *strip, LEDdisplay *_l);
+    void begin(Adafruit_NeoPixel *strip, LEDdisplay *_l, Stream &serial);
     int  lookforRegion(String *consoleInputStr);
     int  lookforPlant(int consoleInputNumber);
     void printPlantWithLED();
@@ -102,8 +103,7 @@ class MigrationGame {
     int  printCurrentDesiredRegion();
     bool checkIfMatchCurrentDesiredRegions(int nextRegionIdx);
     bool checkIfAtEndOfRegions();
-    // bool checkUpdateHop(int newHop);
-    // int  MigrationGame::checkIfMatchCurrentDesiredRegions(int nextRegionIdx);
+    void checkGameStateMachine();
 };
 
 #endif  // MigrationGame_h

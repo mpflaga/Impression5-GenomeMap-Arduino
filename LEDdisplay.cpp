@@ -52,7 +52,7 @@ void LEDdisplay::begin(Adafruit_NeoPixel *strip, Stream &serial) {
   begin(strip);
   IFDEBUG(_serial = &serial);
   IFDEBUG(_serial->printf("Running - LEDdisplay::%s()\n", __func__));
-  
+
   IFDEBUG(_serial->printf("Last LED is ...\n"));
   IFDEBUG(_serial->printf("  ledSegs[%d].endPos == %d\n", LENGTH_OF_ARRAY(ledSegs) - 1, (int) pgm_read_word(&ledSegs[LENGTH_OF_ARRAY(ledSegs) - 1].endPos)));
 
@@ -92,7 +92,7 @@ void LEDdisplay::advanceCurrentLed(int stepPos, int incr) {
 
   IFDEBUG(_serial->printf("  ledSegs[dd].startPos, endPos, buttonID =  \n"));
   IFDEBUG(_serial->printf("       ..[%02d] = %04d, %04d, %04d, '%p'\n", stepPos, (int) pgm_read_word(&ledSegs[stepPos].startPos), (int) pgm_read_word(&ledSegs[stepPos].endPos), ((int) pgm_read_word(&ledSegs[stepPos].buttonID)), regions[((int) pgm_read_word(&ledSegs[stepPos].buttonID))].name));
-  
+
   IFDEBUG(_serial->printf("Ending  - LEDdisplay::%s()\n", __func__));
 }
 
@@ -109,18 +109,18 @@ void LEDdisplay::printRingSegs() {
 }
 
 void LEDdisplay::colorFillRange(unsigned long color, int beginPos, int endPos) {
-  
+
   #ifdef IFDEBUG
     //IFDEBUG(_serial->printf("Running - LEDdisplay::%s(begin=%d, end=%d, color=0x%06x)\n", __func__, beginPos, endPos, color)); // has error in unsigned long
     _serial->print("Running - LEDdisplay::"); _serial->print(__func__);
       _serial->print("(0x"); _serial->print(color, HEX);
       _serial->print(", "); _serial->print(beginPos);
       _serial->print(", "); _serial->print(endPos);
-      _serial->println(")"); 
+      _serial->println(")");
   #endif
 
   IFDEBUG_LED(_serial->printf("  setting LEDs: "));
-  for(int pos = beginPos; pos < (endPos + 1); pos++) { // For each pixel in strip...
+  for (int pos = beginPos; pos < (endPos + 1); pos++) { // For each pixel in strip...
     IFDEBUG_LED(_serial->printf("%d, ", pos));
     _strip->setPixelColor(pos, color);             //  Set pixel's color (in RAM)
   }
@@ -132,11 +132,11 @@ void LEDdisplay::colorFillRange(unsigned long color, int beginPos, int endPos) {
 
 void LEDdisplay::colorFill(unsigned long color) {
   //IFDEBUG(IFDEBUG(_serial->printf("Running - LEDdisplay::%s(0x%06x)\n", __func__, color)); // has error in unsigned long
-  #ifdef IFDEBUG
-    _serial->print("Running - LEDdisplay::"); _serial->print(__func__);
-      _serial->print("(0x"); _serial->print(color, HEX);
-      _serial->println(")"); 
-  #endif
+#ifdef IFDEBUG
+  _serial->print("Running - LEDdisplay::"); _serial->print(__func__);
+  _serial->print("(0x"); _serial->print(color, HEX);
+  _serial->println(")");
+#endif
 
   colorFillRange(color, 0, _strip->numPixels());
 
@@ -147,7 +147,7 @@ LedSegments LEDdisplay::findRegionsLedRange(Countries region) {
   IFDEBUG(_serial->printf("Running - LEDdisplay::%s(%d)\n", __func__, region));
 
   LedSegments response = { 0, 0, None };
-  
+
   IFDEBUG(_serial->printf("  Scanning ledSegs[]...\n"));
   IFDEBUG_LED(_serial->printf("  ledSegs[dd].startPos, endPos, buttonID =  \n"));
   for (int idx = 0; idx < LENGTH_OF_ARRAY(ledSegs); idx++) {
@@ -162,11 +162,11 @@ LedSegments LEDdisplay::findRegionsLedRange(Countries region) {
       break;
     }
   }
-  
+
   if (response.buttonID == None) {
     IFDEBUG(_serial->printf("No match for region was found\n"));
   }
 
   IFDEBUG(_serial->printf("Ending  - LEDdisplay::%s()\n", __func__));
-  return response;  
+  return response;
 }

@@ -8,38 +8,38 @@
 
 
 typedef enum {
-None               , //  0 
-AFRICA             , //  1 
-ARIZONA_NEW_MEXICO , //  2 
-ASIA               , //  3 
-AUSTRALIA          , //  4 
-BOLIVIA_PERU       , //  5 
-BRAZIL             , //  6 
-BRITISH_ISLES      , //  7 
-CALIFORNIA         , //  8 
-CANADA             , //  9 
-CARIBBEAN          , // 10 
-CHILE              , // 11 
-CHINA              , // 12 
-E_NORTH_AMERICA    , // 13 
-EAST_AFRICA        , // 14 
-EUROPE             , // 15 
-INDIA              , // 16 
-JAPAN              , // 17 
-KAZAKHSTAN         , // 18 
-KOREA              , // 19 
-MADAGASCAR         , // 20 
-MALI               , // 21 
-MEXICO             , // 22 
-NEW_ENGLAND        , // 23 
-PACIFIC_ISLANDS    , // 24 
-PANAMA             , // 25 
-SE_ASIA            , // 26 
-SOUTH_CAROLINA     , // 27 
-SPAIN              , // 28 
-TURKEY             , // 29 
-W_SOUTH_AMERICA    , // 30 
-WEST_AFRICA          // 31
+  None               , //  0
+  AFRICA             , //  1
+  ARIZONA_NEW_MEXICO , //  2
+  ASIA               , //  3
+  AUSTRALIA          , //  4
+  BOLIVIA_PERU       , //  5
+  BRAZIL             , //  6
+  BRITISH_ISLES      , //  7
+  CALIFORNIA         , //  8
+  CANADA             , //  9
+  CARIBBEAN          , // 10
+  CHILE              , // 11
+  CHINA              , // 12
+  E_NORTH_AMERICA    , // 13
+  EAST_AFRICA        , // 14
+  EUROPE             , // 15
+  INDIA              , // 16
+  JAPAN              , // 17
+  KAZAKHSTAN         , // 18
+  KOREA              , // 19
+  MADAGASCAR         , // 20
+  MALI               , // 21
+  MEXICO             , // 22
+  NEW_ENGLAND        , // 23
+  PACIFIC_ISLANDS    , // 24
+  PANAMA             , // 25
+  SE_ASIA            , // 26
+  SOUTH_CAROLINA     , // 27
+  SPAIN              , // 28
+  TURKEY             , // 29
+  W_SOUTH_AMERICA    , // 30
+  WEST_AFRICA          // 31
 } Countries;
 
 typedef struct {
@@ -50,7 +50,7 @@ typedef struct {
 } regionChipID;
 
 // needs to be in same order as Countries.
-static const regionChipID regions[] PROGMEM = {   
+static const regionChipID regions[] PROGMEM = {
   {"None"              , 0x00,  0,  0}, //  0
   {"AFRICA"            , 0x5B,  5, 90}, //  1
   {"ARIZONA_NEW_MEXICO", 0x5D,  5, 54}, //  2
@@ -83,7 +83,7 @@ static const regionChipID regions[] PROGMEM = {
   {"TURKEY"            , 0x5B,  0, 37}, // 29
   {"W_SOUTH_AMERICA"   , 0x5C,  1, 67}, // 30
   {"WEST_AFRICA"       , 0x5B,  6, 82}  // 31
-}; 
+};
 #define SIZE_OF_REGIONS LENGTH_OF_ARRAY(regions)
 
 typedef enum {
@@ -97,15 +97,15 @@ typedef struct {
   Countries buttonID;
 } LedSegments;
 
-static const LedSegments ledSegs[] PROGMEM = {   
+static const LedSegments ledSegs[] PROGMEM = {
   {   0,    0,  None              }, //  0
-  {   1,   16,  AUSTRALIA         }, //  1 
+  {   1,   16,  AUSTRALIA         }, //  1
   {  17,   66,  None              }, //  2
   {  67,   84,  None              }, //  3
   {  85,  106,  None              }, //  4
   { 107,  125,  None              }, //  5
   { 126,  141,  None              }, //  6
-  { 142,  157,  BRAZIL            }, //  7 
+  { 142,  157,  BRAZIL            }, //  7
   { 158,  165,  None              }, //  8
   { 166,  174,  None              }, //  9
   { 175,  193,  None              }, // 10
@@ -189,13 +189,13 @@ static const LedSegments ledSegs[] PROGMEM = {
   {1352, 1357,  None              }, // 88
   {1358, 1373,  None              }, // 89
   {1374, 1389,  AFRICA            }  // 90
-};              
+};
 #define SIZE_OF_LEDSEGS LENGTH_OF_ARRAY(ledSegs)
 
 static const LedSegments RingSegs[] PROGMEM = {
   {  99,   88,  None              }, //  0
-  {   1,   16,  AUSTRALIA         }, //  1 
-  { 142,  157,  BRAZIL            }, //  7 
+  {   1,   16,  AUSTRALIA         }, //  1
+  { 142,  157,  BRAZIL            }, //  7
   { 236,  251,  PACIFIC_ISLANDS   }, // 12
   { 290,  305,  SE_ASIA           }, // 15
   { 313,  328,  CHINA             }, // 17
@@ -345,7 +345,7 @@ static const plantStruct plants[] PROGMEM = {
           41, 90, 34, 59, 62, 61, 80, 84, 88, 89, 4, 3, 10, 25, 24, 33
         }
       }
-    }                        // end Hops  
+    }                        // end Hops
   },                         // end plant
 
   {                          // plant #2
@@ -408,7 +408,7 @@ static const plantStruct plants[] PROGMEM = {
           49, 45, 48
         }
       }
-    }                        // end Hops  
+    }                        // end Hops
   },                         // end plant
 
   {                          // plant #3
@@ -443,7 +443,7 @@ static const plantStruct plants[] PROGMEM = {
           49, 43, 47, 48
         }
       }
-    }                        // end Hops  
+    }                        // end Hops
   },                         // end plant
 
   {                          // plant #4
@@ -478,7 +478,7 @@ static const plantStruct plants[] PROGMEM = {
           55, 18, 56
         }
       }
-    }                        // end Hops  
+    }                        // end Hops
   },                         // end plant
 
   {                          // plant #5
@@ -513,7 +513,7 @@ static const plantStruct plants[] PROGMEM = {
           64, 81, 60, 63
         }
       }
-    }                        // end Hops  
+    }                        // end Hops
   },                         // end plant
 
   {                          // plant #6
@@ -539,7 +539,7 @@ static const plantStruct plants[] PROGMEM = {
           82, 7, 77, 28, 25, 10, 3, 4, 88, 87, 5, 6, 9, 78
         }
       }
-    }                        // end Hops  
+    }                        // end Hops
   },                         // end plant
 
   {                          // plant #7
@@ -565,7 +565,7 @@ static const plantStruct plants[] PROGMEM = {
           71, 67, 13, 69, 70, 68+DESCEND
         }
       }
-    }                        // end Hops  
+    }                        // end Hops
   },                         // end plant
 
 };
