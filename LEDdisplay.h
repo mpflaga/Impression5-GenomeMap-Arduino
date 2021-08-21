@@ -29,29 +29,28 @@
    \class LEDdisplay
    \brief Interface Driver to the f NeoPixels in 7 segment arrangement.
 */
-class LEDdisplay {
+class LEDdisplay : public Adafruit_NeoPixel {
 
   public:
 
-    LEDdisplay();
+    LEDdisplay(uint16_t n, uint8_t p=6, neoPixelType t=NEO_GRB + NEO_KHZ800);
     ~LEDdisplay();
     int currentLedPos;
     int currentLedOffset;
     int displaySize;
-    void begin(Adafruit_NeoPixel *strip);
-    void begin(Adafruit_NeoPixel *strip, Stream &serial);
+    void begin();
+    void begin(Stream &serial);
     void printRegions();
     void printSegs();
     void printRingSegs();
     void advanceCurrentLed(int stepPos, int incr = 1);
     void colorFillRange(unsigned long color, int beginPos, int endPos);
-    void colorFill(unsigned long color);
+    void colorFillAll(unsigned long color);
     LedSegments findRegionsLedRange(Countries region);
 
   private:
     StreamEx* _serial;
 
-    Adafruit_NeoPixel* _strip;
     unsigned long previousMillis = 0;        // will store last time LED was updated
     const long interval = 100;               // interval at which to blink (milliseconds)
 

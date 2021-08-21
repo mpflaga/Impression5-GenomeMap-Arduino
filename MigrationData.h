@@ -158,7 +158,7 @@ static const LedSegments ledSegs[] PROGMEM = {
   { 899,  907,  None              }, // 57
   { 908,  923,  MEXICO            }, // 58
   { 924,  937,  None              }, // 59
-  { 938,  969,  None              }, // 60
+  { 937,  969,  None              }, // 60
   { 970,  987,  None              }, // 61
   { 988, 1027,  None              }, // 62
   {1028, 1032,  None              }, // 63
@@ -188,7 +188,11 @@ static const LedSegments ledSegs[] PROGMEM = {
   {1345, 1351,  None              }, // 87
   {1352, 1357,  None              }, // 88
   {1358, 1373,  None              }, // 89
-  {1374, 1389,  AFRICA            }  // 90
+  {1374, 1389,  AFRICA            }, // 90
+  { 141,  141,  None              }, // 91
+  {1318, 1318,  None              }, // 92
+  {1389, 1389,  None              }, // 93 // Need last value to be max LED for autodetect Length of LEDs.
+
 };
 #define SIZE_OF_LEDSEGS LENGTH_OF_ARRAY(ledSegs)
 
@@ -305,7 +309,7 @@ static const plantStruct plants[] PROGMEM = {
           67
         },
         {                    // steps
-          67 + DESCEND, 65, 66
+          65, 66
         }
       },                     // end Hop_1
       {                      // Hop_2
@@ -314,7 +318,7 @@ static const plantStruct plants[] PROGMEM = {
           54
         },
         {                    // steps
-          54, 57
+          57 + DESCEND
         }
       },                     // end Hop_2
       {                      // Hop_3
@@ -323,7 +327,7 @@ static const plantStruct plants[] PROGMEM = {
           52
         },
         {                    // steps
-          52, 53
+          53 + DESCEND
         }
       },                     // end Hop_3
       {                      // Hop_4
@@ -332,7 +336,7 @@ static const plantStruct plants[] PROGMEM = {
           50
         },
         {                    // steps
-          50, 51
+          51 + DESCEND
         }
       },                     // end Hop_4
       {                      // Hop_5
@@ -342,7 +346,7 @@ static const plantStruct plants[] PROGMEM = {
 
         },
         {                    // steps
-          41, 90, 34, 59, 62, 61, 80, 84, 88, 89, 4, 3, 10, 25, 24, 33
+          59, 62 + DESCEND, 61 + DESCEND, 80 + DESCEND, 84, 88, 89, 4 + DESCEND, 3 + DESCEND, 10, 25 + DESCEND, 24 + DESCEND, 33
         }
       }
     }                        // end Hops
@@ -359,7 +363,7 @@ static const plantStruct plants[] PROGMEM = {
           67, 75
         },
         {                    // steps
-          67, 75, 72, 74
+          72 + DESCEND, 74
         }
       },                     // end Hop_1
       {                      // Hop_2
@@ -368,7 +372,7 @@ static const plantStruct plants[] PROGMEM = {
           58, 77
         },
         {                    // steps
-          58, 77, 66, 65, 76
+          66 + DESCEND, 65 + DESCEND, 76
         }
       },                     // end Hop_2
       {                      // Hop_3
@@ -377,7 +381,7 @@ static const plantStruct plants[] PROGMEM = {
           41
         },
         {                    // steps
-          41, 59, 62
+          59, 62 + DESCEND
         }
       },                     // end Hop_3
       {                      // Hop_4
@@ -386,7 +390,7 @@ static const plantStruct plants[] PROGMEM = {
           39, 44
         },
         {                    // steps
-          39, 44, 40, 42, 46
+          40 + DESCEND, 42, 46 + DESCEND
         }
       },                     // end Hop_4
       {                      // Hop_5
@@ -395,7 +399,7 @@ static const plantStruct plants[] PROGMEM = {
           90, 29, 1
         },
         {                    // steps
-          90, 29, 1, 61, 80, 84, 88, 89, 90, 4, 3, 10, 25, 28, 2
+          61 + DESCEND, 80 + DESCEND, 84, 88, 89, 4 + DESCEND, 3 + DESCEND, 10, 25 + DESCEND, 28, 2 + DESCEND
         }
       },                     // end Hop_5
       {                      // Hop_6
@@ -405,7 +409,7 @@ static const plantStruct plants[] PROGMEM = {
 
         },
         {                    // steps
-          49, 45, 48
+          45, 48
         }
       }
     }                        // end Hops
@@ -422,7 +426,7 @@ static const plantStruct plants[] PROGMEM = {
           37
         },
         {                    // steps
-          37, 36
+          36
         }
       },                     // end Hop_1
       {                      // Hop_2
@@ -431,7 +435,7 @@ static const plantStruct plants[] PROGMEM = {
           39
         },
         {                    // steps
-          39, 38
+          38
         }
       },                     // end Hop_2
       {                      // Hop_3
@@ -440,7 +444,7 @@ static const plantStruct plants[] PROGMEM = {
           49
         },
         {                    // steps
-          49, 43, 47, 48
+          43, 47, 48
         }
       }
     }                        // end Hops
@@ -457,16 +461,16 @@ static const plantStruct plants[] PROGMEM = {
           29
         },
         {                    // steps
-          29, 23, 32
+          23, 32 + DESCEND
         }
       },                     // end Hop_1
       {                      // Hop_2
         "Step 3 (guest touches JAPAN KOREA or SE ASIA)", // textMSG
         {                    // nextButtons
-          20, 22, 15, 19
+          20, 22, 15
         },
         {                    // steps
-          20, 22, 15, 19, 21, 16
+          19, 21, 16 + DESCEND
         }
       },                     // end Hop_2
       {                      // Hop_3
@@ -475,7 +479,7 @@ static const plantStruct plants[] PROGMEM = {
           55
         },
         {                    // steps
-          55, 18, 56
+          18, 56 + DESCEND
         }
       }
     }                        // end Hops
@@ -492,7 +496,7 @@ static const plantStruct plants[] PROGMEM = {
           82
         },
         {                    // steps
-          82, 85
+          85 + DESCEND
         }
       },                     // end Hop_1
       {                      // Hop_2
@@ -501,7 +505,7 @@ static const plantStruct plants[] PROGMEM = {
           7
         },
         {                    // steps
-          7, 83, 79, 8
+          83, 79 + DESCEND, 8 + DESCEND, 91 // MPF - WIP need to add LED141.
         }
       },                     // end Hop_2
       {                      // Hop_3
@@ -510,7 +514,7 @@ static const plantStruct plants[] PROGMEM = {
           64
         },
         {                    // steps
-          64, 81, 60, 63
+          81, 60 + DESCEND, 63
         }
       }
     }                        // end Hops
@@ -527,7 +531,7 @@ static const plantStruct plants[] PROGMEM = {
           31
         },
         {                    // steps
-          31, 30
+          30
         }
       },                     // end Hop_1
       {                      // Hop_2
@@ -536,7 +540,7 @@ static const plantStruct plants[] PROGMEM = {
           82, 7, 77
         },
         {                    // steps
-          82, 7, 77, 28, 25, 10, 3, 4, 88, 87, 5, 6, 9, 78
+          28 + DESCEND, 25, 10 + DESCEND, 3, 4, 88 + DESCEND, 87 + DESCEND, 92, 5, 6, 9 + DESCEND, 78 + DESCEND
         }
       }
     }                        // end Hops
@@ -553,7 +557,7 @@ static const plantStruct plants[] PROGMEM = {
           15, 27
         },
         {                    // steps
-          15, 27, 14, 11, 26
+          14, 11 + DESCEND, 26
         }
       },                     // end Hop_1
       {                      // Hop_2
@@ -562,7 +566,7 @@ static const plantStruct plants[] PROGMEM = {
           71, 67
         },
         {                    // steps
-          71, 67, 13, 69, 70, 68+DESCEND
+          13, 69 + DESCEND, 70, 68 + DESCEND
         }
       }
     }                        // end Hops

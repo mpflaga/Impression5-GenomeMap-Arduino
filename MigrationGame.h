@@ -18,17 +18,18 @@ typedef enum  {
   NO_PLANT_SELECTED,
   NO_PLANT_PRIMED,
   PLANT_INTIALLY_SELECTED,
-  PLANT_INTIALLY_DIMMING,
-  PLANT_INTIALLY_DIMMING_FINISHED,
+  PLANT_INTIALLY_DIMMING_ALL,
+  PLANT_INTIALLY_DIMMING_ALL_FINISHED,
+  PLANT_INTIAL_START_POSITION,
   PLANT_ACCEPTED_WAITING_FOR_BUTTON,
   INCORRECT_REGION_SELECTED,
   INCORRECT_REGION_WAIT_TO_TURN_OFF,
   CORRECT_REGION_SELECTED,
-  CORRECT_REGION_WAIT_TO_TURN_OFF,
   START_DRAWING_LINE_TO_REGION,
   DRAWING_LINE_TO_REGION,
   START_DRAWING_SEGMENT,
   LOOP_EACH_LED,
+  LOOP_EACH_LED_PAUSE,
   FINISHED_SEGMENT,
   FINISHED_LINE_TO_REGION,
   WINNER_START,
@@ -36,21 +37,22 @@ typedef enum  {
   ABANDONED
 } state_m; //enum state_m
 
-static const char stateStr[][35] PROGMEM = {
+static const char stateStr[][40] PROGMEM = {
   "NO_PLANT_SELECTED",
   "NO_PLANT_PRIMED",
   "PLANT_INTIALLY_SELECTED",
-  "PLANT_INTIALLY_DIMMING",
-  "PLANT_INTIALLY_DIMMING_FINISHED",
+  "PLANT_INTIALLY_DIMMING_ALL",
+  "PLANT_INTIALLY_DIMMING_ALL_FINISHED",
+  "PLANT_INTIAL_START_POSITION",
   "PLANT_ACCEPTED_WAITING_FOR_BUTTON",
   "INCORRECT_REGION_SELECTED",
   "INCORRECT_REGION_WAIT_TO_TURN_OFF",
   "CORRECT_REGION_SELECTED",
   "CORRECT_REGION_WAIT_TO_TURN_OFF",
-  "START_DRAWING_LINE_TO_REGION",
   "DRAWING_LINE_TO_REGION",
   "START_DRAWING_SEGMENT",
   "LOOP_EACH_LED",
+  "LOOP_EACH_LED_PAUSE",
   "FINISHED_SEGMENT",
   "FINISHED_LINE_TO_REGION",
   "WINNER_START",
@@ -63,8 +65,7 @@ class MigrationGame {
 
     //Stream* _serial;
     StreamEx* _serial;
-    LEDdisplay* _ledDisplay;
-    Adafruit_NeoPixel* _strip;
+    LEDdisplay* _led;
     int prv_region;
     uint32_t ledNextMillis;
     uint32_t ledStartMillis;
@@ -75,6 +76,7 @@ class MigrationGame {
     int startPos;
     int endPos;
     int currentBrightness;
+    int maxBrightness = 15;
 
   public:
 
@@ -87,8 +89,8 @@ class MigrationGame {
 
     MigrationGame();
     ~MigrationGame();
-    void begin(Adafruit_NeoPixel *strip, LEDdisplay *_l);
-    void begin(Adafruit_NeoPixel *strip, LEDdisplay *_l, Stream &serial);
+    void begin(LEDdisplay *ledDisplay);
+    void begin(LEDdisplay *ledDisplay, Stream &serial);
     int  lookforRegion(String *consoleInputStr);
     int  lookforPlant(int consoleInputNumber);
     void printPlantWithLED();

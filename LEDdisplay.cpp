@@ -15,7 +15,7 @@
 
    reserve memory
 */
-LEDdisplay::LEDdisplay() {
+LEDdisplay::LEDdisplay(uint16_t n, uint8_t p, neoPixelType t) : Adafruit_NeoPixel(n, p, t) {
 #if DEBUG_LEVEL==1
   Serial.print(F("Constructed - LEDdisplay::")); Serial.print(__func__); Serial.println();
 #endif
@@ -36,10 +36,10 @@ LEDdisplay::~LEDdisplay() {
 
    initialize LEDdisplay along with default private values and pointers.
 */
-void LEDdisplay::begin(Adafruit_NeoPixel *strip) {
-  _strip = strip;
+void LEDdisplay::begin() {
   currentLedPos = 0;
   currentLedOffset = 0;
+  Adafruit_NeoPixel::begin();
 
 }
 
@@ -48,8 +48,8 @@ void LEDdisplay::begin(Adafruit_NeoPixel *strip) {
 
    initialize LEDdisplay with a none default Serial Stream for debug.
 */
-void LEDdisplay::begin(Adafruit_NeoPixel *strip, Stream &serial) {
-  begin(strip);
+void LEDdisplay::begin(Stream &serial) {
+  begin();
   IFDEBUG(_serial = &serial);
   IFDEBUG(_serial->printf("Running - LEDdisplay::%s()\n", __func__));
 
@@ -120,17 +120,17 @@ void LEDdisplay::colorFillRange(unsigned long color, int beginPos, int endPos) {
   #endif
 
   IFDEBUG_LED(_serial->printf("  setting LEDs: "));
-  for (int pos = beginPos; pos < (endPos + 1); pos++) { // For each pixel in strip...
+  for (int pos = (beginPos - 1); pos < endPos; pos++) { // For each pixel in strip...
     IFDEBUG_LED(_serial->printf("%d, ", pos));
-    _strip->setPixelColor(pos, color);             //  Set pixel's color (in RAM)
+    Adafruit_NeoPixel::setPixelColor(pos, color);             //  Set pixel's color (in RAM)
   }
   IFDEBUG_LED(_serial->printf("\n"));
-  _strip->show();                                  //  Update strip to match
+  Adafruit_NeoPixel::show();                                  //  Update strip to match
 
   IFDEBUG(_serial->printf("Ending  - LEDdisplay::%s()\n", __func__));
 }
 
-void LEDdisplay::colorFill(unsigned long color) {
+void LEDdisplay::colorFillAll(unsigned long color) {
   //IFDEBUG(IFDEBUG(_serial->printf("Running - LEDdisplay::%s(0x%06x)\n", __func__, color)); // has error in unsigned long
 #ifdef IFDEBUG
   _serial->print("Running - LEDdisplay::"); _serial->print(__func__);
@@ -138,7 +138,7 @@ void LEDdisplay::colorFill(unsigned long color) {
   _serial->println(")");
 #endif
 
-  colorFillRange(color, 0, _strip->numPixels());
+  colorFillRange(color, 0, Adafruit_NeoPixel::numPixels());
 
   IFDEBUG(_serial->printf("Ending  - LEDdisplay::%s()\n", __func__));
 }

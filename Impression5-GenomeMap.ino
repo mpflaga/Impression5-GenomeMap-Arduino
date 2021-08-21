@@ -7,15 +7,14 @@
 
 #include <Adafruit_NeoPixel.h>
 #define LED_PIN    11
-Adafruit_NeoPixel* strip;
 
 #include "MigrationData.h"
 
 #include "LEDdisplay.h"
-LEDdisplay* ledDisplay;
+LEDdisplay* led;
 
 #include "MigrationGame.h"
-MigrationGame* m;
+MigrationGame* game;
 
 StreamEx serial = Serial;
 
@@ -30,29 +29,25 @@ void setup()
 
   int lastLED = (int) pgm_read_word(&ledSegs[SIZE_OF_LEDSEGS - 1].endPos);
 
-  strip = new Adafruit_NeoPixel(lastLED, LED_PIN, NEO_GRB + NEO_KHZ800);
-  strip->begin();
-  strip->setBrightness(255 * .9);
-  strip->clear();
-  strip->show();
+
   Serial.print(F("Instanced ")); Serial.print(lastLED); Serial.println(F(" LED NeoPixel strip."));
 
-  ledDisplay = new LEDdisplay();
-  ledDisplay->begin(strip, Serial);
+  led = new LEDdisplay(lastLED, LED_PIN, NEO_GRB + NEO_KHZ800);
+  led->begin(Serial);
 
-  m = new MigrationGame();
-  m->begin(strip, ledDisplay, Serial);
+  game = new MigrationGame();
+  game->begin(led, Serial);
 
 #if 0  // print out all data structures (if debug is enabled).
-  m->printPlantWithLED();
-  ledDisplay->printRegions();
-  ledDisplay->printSegs();
-  ledDisplay->printRingSegs();
+  game->printPlantWithLED();
+  led->printRegions();
+  led->printSegs();
+  led->printRingSegs();
 #endif
 
   // print build stat's.
   Serial.print(F("Build Date: ")); Serial.print(F(__DATE__)); Serial.print(F(" ")); Serial.println(F(__TIME__));
-  serial.printf("m->gameState[0] = '%d'(%p)\n", m->gameState[0], stateStr[m->gameState[0]]);
+  serial.printf("game->gameState[0] = '%d'(%p)\n", game->gameState[0], stateStr[game->gameState[0]]);
 
   Serial.println(F("Enter in State Change?"));
 
@@ -68,7 +63,7 @@ void loop()
     Serial.println(F("Enter in State Change?"));
   }
 
-  m->checkGameStateMachine();
+  game->checkGameStateMachine();
 }
 
 String getConsole() {
@@ -91,30 +86,30 @@ String getConsole() {
 
     } else if (consoleInputStr == "D") {
       // list out plants and regions
-      m->printPlants();
+      game->printPlants();
       Serial.println();
-      m->printRegions();
+      game->printRegions();
 
     } else if (consoleInputStr == "H") {
       // list out histories
-      m->printRegionHistory();
-      m->printPlantHistory();
-      serial.printf("  hopPos  = %d\n", m->hopPos);
-      serial.printf("  stepPos = %d\n", m->stepPos);
-      serial.printf("  m->prv_gameState= '%p'(%d)\n", stateStr[m->prv_gameState], m->prv_gameState);
-      m->printGameStateHistory();
+      game->printRegionHistory();
+      game->printPlantHistory();
+      serial.printf("  hopPos  = %d\n", game->hopPos);
+      serial.printf("  stepPos = %d\n", game->stepPos);
+      serial.printf("  game->prv_gameState= '%p'(%d)\n", stateStr[game->prv_gameState], game->prv_gameState);
+      game->printGameStateHistory();
 
     } else if (consoleInputStr == "G") {
       // list out history of gameState[]
       Serial.println("History of gameState[] :");
-      serial.printf("  m->prv_gameState = '%p'(%d)\n", stateStr[m->prv_gameState], m->prv_gameState);
-      for (int idx = 0; idx < LENGTH_OF_ARRAY(m->gameState); idx++) {
-        serial.printf("  gameState[%d]  = '%p'(%d)\n", idx, stateStr[m->gameState[idx]], m->gameState[idx]);
+      serial.printf("  game->prv_gameState = '%p'(%d)\n", stateStr[game->prv_gameState], game->prv_gameState);
+      for (int idx = 0; idx < LENGTH_OF_ARRAY(game->gameState); idx++) {
+        serial.printf("  gameState[%d]  = '%p'(%d)\n", idx, stateStr[game->gameState[idx]], game->gameState[idx]);
       }
-      serial.printf("  plant[%d] = %p(%d)\n", 0, plants[m->plant[0]].plantName, m->plant[0]);
+      serial.printf("  plant[%d] = %p(%d)\n", 0, plants[game->plant[0]].plantName, game->plant[0]);
 
     } else if (consoleInputStr == "R") {
-      m->printCurrentDesiredRegion();
+      game->printCurrentDesiredRegion();
 
     } else if (consoleInputStr == "?") {
       // print help describing commands.
@@ -130,10 +125,10 @@ String getConsole() {
 
     } else if ( isDigit(consoleInputStr.charAt(0)) ) {
       // cross reference 0..9 to find matching plant
-      int nextPlantIdx = m->lookforPlant(consoleInputStr.toInt());
+      int nextPlantIdx = game->lookforPlant(consoleInputStr.toInt());
       if (nextPlantIdx >= 0) {
         // when positive value will be index of plant.
-        if (m->updatePlant(nextPlantIdx)) {
+        if (game->updatePlant(nextPlantIdx)) {
           // when a different plant, update settings
           Serial.println(F("Plant Updated"));
 
@@ -144,12 +139,12 @@ String getConsole() {
       }
     } else {
       // Check if text matches new Region (aka NEW HOP)!
-      int nextRegionIdx = m->lookforRegion(&consoleInputStr);
+      int nextRegionIdx = game->lookforRegion(&consoleInputStr);
       if (nextRegionIdx < 0) {
         Serial.print(F("No Change"));
       } else {
-        m->updateRegion(nextRegionIdx);
-        serial.printf("Accepted entered Region %p(%d)\n", regions[m->region[0]].name, m->region[0]);
+        game->updateRegion(nextRegionIdx);
+        serial.printf("Accepted entered Region %p(%d)\n", regions[game->region[0]].name, game->region[0]);
       }
     }
     response = consoleInputStr;
