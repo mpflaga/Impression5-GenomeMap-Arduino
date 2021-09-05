@@ -106,6 +106,7 @@ class MigrationGame {
     bool checkIfMatchCurrentDesiredRegions(int nextRegionIdx);
     bool checkIfAtEndOfRegions();
     void checkGameStateMachine();
+    void redrawWholeMigration();
 };
 
 #endif  // MigrationGame_h
