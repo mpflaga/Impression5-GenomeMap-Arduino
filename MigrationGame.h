@@ -31,13 +31,13 @@ typedef enum  {
   LOOP_EACH_LED,
   LOOP_EACH_LED_PAUSE,
   FINISHED_SEGMENT,
-  FINISHED_LINE_TO_REGION,
-  WINNER_START,
-  WINNER_END,
-  ABANDONED
+  BEGIN_WIN,
+  END_WIN,
+  FOO2,
+  FINISHED_LINE_TO_REGION
 } state_m; //enum state_m
 
-static const char stateStr[][40] PROGMEM = {
+static const char stateStr[][42] PROGMEM = {
   "NO_PLANT_SELECTED",
   "NO_PLANT_PRIMED",
   "PLANT_INTIALLY_SELECTED",
@@ -48,16 +48,16 @@ static const char stateStr[][40] PROGMEM = {
   "INCORRECT_REGION_SELECTED",
   "INCORRECT_REGION_WAIT_TO_TURN_OFF",
   "CORRECT_REGION_SELECTED",
-  "CORRECT_REGION_WAIT_TO_TURN_OFF",
+  "START_DRAWING_LINE_TO_REGION",
   "DRAWING_LINE_TO_REGION",
   "START_DRAWING_SEGMENT",
   "LOOP_EACH_LED",
   "LOOP_EACH_LED_PAUSE",
   "FINISHED_SEGMENT",
-  "FINISHED_LINE_TO_REGION",
-  "WINNER_START",
-  "WINNER_END",
-  "ABANDONED"
+  "BEGIN_WIN",
+  "END_WIN",
+  "FOO2",
+  "FINISHED_LINE_TO_REGION"
 };
 
 class MigrationGame {
@@ -93,7 +93,7 @@ class MigrationGame {
     void begin(LEDdisplay *ledDisplay, Stream &serial);
     int  lookforRegion(String *consoleInputStr);
     int  lookforPlant(int consoleInputNumber);
-    void printPlantWithLED();
+    void printPlantsWithLED();
     void printRegionHistory();
     void printPlantHistory();
     void printGameStateHistory();

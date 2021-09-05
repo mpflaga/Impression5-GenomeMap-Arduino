@@ -131,19 +131,19 @@ void MigrationGame::printGameStateHistory() {
   IFDEBUG(_serial->printf("Ending  - MigrationGame::%s()\n", __func__));
 }
 
-void MigrationGame::printPlantWithLED() {
+void MigrationGame::printPlantsWithLED() {
   IFDEBUG(_serial->printf("Running - MigrationGame::%s()\n", __func__));
-  for (int idx = 0; idx < SIZE_OF_PLANTS; idx++) {
-    //IFDEBUG(_serial->printf("  plants[%d].plantName = %s\n", idx, pgmStrToRAM(plants[idx].plantName)));
-    IFDEBUG(_serial->printf("  plants[%d].\n", idx));
-    IFDEBUG(_serial->printf("    plantName    = %p\n", plants[idx].plantName));
-    IFDEBUG(_serial->printf("    placeCardID  = %d\n", (int) pgm_read_word(&plants[idx].placeCardID)));
+  for (int plantPos = 0; plantPos < SIZE_OF_PLANTS; plantPos++) {
+    //IFDEBUG(_serial->printf("  plants[%d].plantName = %s\n", plantPos, pgmStrToRAM(plants[plantPos].plantName)));
+    IFDEBUG(_serial->printf("  plants[%d].\n", plantPos));
+    IFDEBUG(_serial->printf("    plantName    = %p\n", plants[plantPos].plantName));
+    IFDEBUG(_serial->printf("    placeCardID  = %d\n", (int) pgm_read_word(&plants[plantPos].placeCardID)));
     for (int hop = 0; hop < SIZE_OF_HOPS; hop++) {
-      if ((int) pgm_read_word(plants[idx].hops[hop].textMSG) != 0) {
+      if ((int) pgm_read_word(plants[plantPos].hops[hop].textMSG) != 0) {
         IFDEBUG(_serial->printf("    hops[%d].\n", hop));
-        IFDEBUG(_serial->printf("      textMSG    = '%p'\n", plants[idx].hops[hop].textMSG));
+        IFDEBUG(_serial->printf("      textMSG    = '%p'\n", plants[plantPos].hops[hop].textMSG));
         for (int nButtonPos = 0; nButtonPos < SIZE_OF_NEXTBUTTONS; nButtonPos++) {
-          int nextLedSeg = (int) pgm_read_word(&plants[idx].hops[hop].nextButtons[nButtonPos]);
+          int nextLedSeg = (int) pgm_read_word(&plants[plantPos].hops[hop].nextButtons[nButtonPos]);
           if (nextLedSeg > 0) {
             IFDEBUG(_serial->printf("        nextButtons[%d]  = '%d' : ", nButtonPos, nextLedSeg));
             for (int ledpos = (int) pgm_read_word(&ledSegs[nextLedSeg].startPos);
@@ -155,7 +155,7 @@ void MigrationGame::printPlantWithLED() {
           }
         }
         for (int nStepPos = 0; nStepPos < SIZE_OF_STEPS; nStepPos++) {
-          int ledSegPos = (int) pgm_read_word(&plants[idx].hops[hop].steps[nStepPos]);
+          int ledSegPos = (int) pgm_read_word(&plants[plantPos].hops[hop].steps[nStepPos]);
           if (ledSegPos != 0) {
             bool reverse = false;
 
@@ -341,7 +341,8 @@ void MigrationGame::checkGameStateMachine() {
   // locally used in some state transistions. Not persistent.
   uint32_t currentLoopMillis = millis();
   LedSegments segment;
-
+  bool isThereAnextHop;
+  
   // print when the state is about to change.
   if (prv_gameState != gameState[0]) {
     _serial->printf("Change of gameState from (%d)'%p' to (%d)'%p'\n", prv_gameState, stateStr[prv_gameState], gameState[0], stateStr[gameState[0]]);
@@ -642,33 +643,34 @@ void MigrationGame::checkGameStateMachine() {
       _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
       hopPos++;
       _serial->printf("  hopPos  = %d\n", hopPos);
-      bool isThereAnextHop = !checkIfAtEndOfRegions();
+      isThereAnextHop = !checkIfAtEndOfRegions();
       _serial->printf("Is there a next Hop = %s\n", (isThereAnextHop ? "True" : "False"));
 
       if (isThereAnextHop) {
         updateGameState(PLANT_ACCEPTED_WAITING_FOR_BUTTON);
       } else {
-        updateGameState(WINNER_START);
+        //updateGameState(WINNER_START);
+        updateGameState(BEGIN_WIN); // MPF WIP - TEST
+        _serial->printf("BEGIN_WIN gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
       }
 
       break;
 
-    case WINNER_START:
+    case BEGIN_WIN: // MPF - WIP for testing.
       _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
-
-      updateGameState(WINNER_END);
+      updateGameState(END_WIN);
       break;
 
-
-    case WINNER_END:
-      //_serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
-
-      break;
-    case ABANDONED:
+    case END_WIN: // MPF - WIP for testing.
       _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
-
+      updateGameState(FOO2);
       break;
 
+    case FOO2: // MPF - WIP for testing.
+/*      _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
+     delay(1000); */
+      break;
+    
     default:
       _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
 
@@ -676,3 +678,54 @@ void MigrationGame::checkGameStateMachine() {
   }
 
 }
+
+
+/* 
+    for (int hop = 0; hop < SIZE_OF_HOPS; hop++) {
+      if ((int) pgm_read_word(plants[plant[0]].hops[hop].textMSG) != 0) {
+        IFDEBUG(_serial->printf("    hops[%d].\n", hop));
+        IFDEBUG(_serial->printf("      textMSG    = '%p'\n", plants[plant[0]].hops[hop].textMSG));
+        for (int nButtonPos = 0; nButtonPos < SIZE_OF_NEXTBUTTONS; nButtonPos++) {
+          int nextLedSeg = (int) pgm_read_word(&plants[plant[0]].hops[hop].nextButtons[nButtonPos]);
+          if (nextLedSeg > 0) {
+            IFDEBUG(_serial->printf("        nextButtons[%d]  = '%d' : ", nButtonPos, nextLedSeg));
+            for (int ledpos = (int) pgm_read_word(&ledSegs[nextLedSeg].startPos);
+                     ledpos <= (int) pgm_read_word(&ledSegs[nextLedSeg].endPos);
+                     ledpos++) {
+              IFDEBUG(_serial->printf("%d, ", ledpos));
+            }
+            IFDEBUG(_serial->printf("\n"));
+          }
+        }
+        for (int nStepPos = 0; nStepPos < SIZE_OF_STEPS; nStepPos++) {
+          int ledSegPos = (int) pgm_read_word(&plants[plant[0]].hops[hop].steps[nStepPos]);
+          if (ledSegPos != 0) {
+            bool reverse = false;
+
+            if (ledSegPos > SIZE_OF_LEDSEGS) {
+              reverse = true;
+              ledSegPos -= SIZE_OF_LEDSEGS;
+            }
+            IFDEBUG(_serial->printf("        steps[%d]  = '%d'(%s) : ", nStepPos, ledSegPos, reverse ? "R" : "A"));
+            int endPos = 0;
+            int startPos = 0;
+
+            if (reverse) {
+              startPos = (int) pgm_read_word(&ledSegs[ledSegPos].endPos);
+              endPos = (int) pgm_read_word(&ledSegs[ledSegPos].startPos);
+              for (int ledpos = startPos; ledpos >= endPos; ledpos--) {
+                IFDEBUG(_serial->printf("%d, ", ledpos));
+              }
+            } else {
+              startPos = (int) pgm_read_word(&ledSegs[ledSegPos].startPos);
+              endPos = (int) pgm_read_word(&ledSegs[ledSegPos].endPos);
+              for (int ledpos = startPos; ledpos <= endPos; ledpos++) {
+                IFDEBUG(_serial->printf("%d, ", ledpos));
+              }
+            }
+            IFDEBUG(_serial->printf("\n"));
+          }
+        }
+      }
+    }
+ */

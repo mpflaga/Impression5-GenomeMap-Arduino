@@ -535,7 +535,7 @@ static const plantStruct plants[] PROGMEM = {
         }
       },                     // end Hop_1
       {                      // Hop_2
-        "Step 3 (guest touches WEST AFRICA BRAZIL or CARIBBEAN)", // textMSG
+        "Step 3 (guest touches WEST AFRICA, BRAZIL or CARIBBEAN)", // textMSG
         {                    // nextButtons
           82, 7, 77
         },

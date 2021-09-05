@@ -39,7 +39,7 @@ void setup()
   game->begin(led, Serial);
 
 #if 0  // print out all data structures (if debug is enabled).
-  game->printPlantWithLED();
+  game->printPlantsWithLED();
   led->printRegions();
   led->printSegs();
   led->printRingSegs();
