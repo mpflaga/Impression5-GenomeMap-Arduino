@@ -29,12 +29,24 @@ void setup()
 
   int lastLED = (int) pgm_read_word(&ledSegs[SIZE_OF_LEDSEGS - 1].endPos);
 
-
   Serial.print(F("Instanced ")); Serial.print(lastLED); Serial.println(F(" LED NeoPixel strip."));
 
   led = new LEDdisplay(lastLED, LED_PIN, NEO_GRB + NEO_KHZ800);
   led->begin(Serial);
 
+  // Testing all Neopixels
+  Serial.println("Test all GRN NeoPixels");
+  led->colorFillRange(led->Color( 0, 255, 0), 1, lastLED);
+  delay(250);
+  Serial.println("Test all RED NeoPixels");
+  led->colorFillRange(led->Color( 255, 0, 0), 1, lastLED);
+  delay(250);
+  Serial.println("Test all BLU NeoPixels");
+  led->colorFillRange(led->Color( 0, 0, 255), 1, lastLED);
+  delay(250);
+  Serial.println("All NeoPixels OFF");
+  led->colorFillRange(led->Color( 0, 0,   0), 1, lastLED);
+  
   game = new MigrationGame();
   game->begin(led, Serial);
 
