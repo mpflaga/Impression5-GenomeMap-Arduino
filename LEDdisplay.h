@@ -33,7 +33,7 @@ class LEDdisplay : public Adafruit_NeoPixel {
 
   public:
 
-    LEDdisplay(uint16_t n, uint8_t p=6, neoPixelType t=NEO_GRB + NEO_KHZ800);
+    LEDdisplay(uint16_t n, uint8_t p = 6, neoPixelType t = NEO_GRB + NEO_KHZ800);
     ~LEDdisplay();
     int currentLedPos;
     int currentLedOffset;
@@ -49,6 +49,11 @@ class LEDdisplay : public Adafruit_NeoPixel {
     LedSegments findRegionsLedRange(Countries region);
     void testAllLEDs();
     void toggleAllLedsWhite();
+    void colorWipe(uint32_t color, int wait);
+    void theaterChase(uint32_t color, int wait);
+    void rainbow(int wait);
+    void theaterChaseRainbow(int wait);
+    void showCaseMode();
 
   private:
     StreamEx* _serial;

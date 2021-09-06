@@ -35,7 +35,7 @@ void setup()
   led->begin(Serial);
 
   led->testAllLEDs();
- 
+
   game = new MigrationGame();
   game->begin(led, Serial);
 
@@ -99,6 +99,10 @@ String getConsole() {
       // Toggle the LEDs all White
       led->toggleAllLedsWhite();
 
+    } else if (consoleInputStr == "S") {
+      // Toggle the LEDs all White
+      led->showCaseMode();
+
     } else if (consoleInputStr == "H") {
       // list out histories
       game->printRegionHistory();
@@ -127,6 +131,7 @@ String getConsole() {
       Serial.println(F("  H - print history Plants and Regions"));
       Serial.println(F("  G - print current state of Game"));
       Serial.println(F("  T - Test the RGB of the LEDs"));
+      Serial.println(F("  S - Test the RGB of the LEDs"));
       Serial.println(F("  W - Toggle all the LEDs White or Off"));
       // Serial.println(F("  L - print current LED Segment Status"));
       // Serial.println(F("  R - print next regions."));
