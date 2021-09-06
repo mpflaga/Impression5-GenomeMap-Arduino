@@ -47,6 +47,8 @@ class LEDdisplay : public Adafruit_NeoPixel {
     void colorFillRange(unsigned long color, int beginPos, int endPos);
     void colorFillAll(unsigned long color);
     LedSegments findRegionsLedRange(Countries region);
+    void testAllLEDs();
+    void toggleAllLedsWhite();
 
   private:
     StreamEx* _serial;

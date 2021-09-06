@@ -34,19 +34,8 @@ void setup()
   led = new LEDdisplay(lastLED, LED_PIN, NEO_GRB + NEO_KHZ800);
   led->begin(Serial);
 
-  // Testing all Neopixels
-  Serial.println("Test all GRN NeoPixels");
-  led->colorFillRange(led->Color( 0, 255, 0), 1, lastLED);
-  delay(250);
-  Serial.println("Test all RED NeoPixels");
-  led->colorFillRange(led->Color( 255, 0, 0), 1, lastLED);
-  delay(250);
-  Serial.println("Test all BLU NeoPixels");
-  led->colorFillRange(led->Color( 0, 0, 255), 1, lastLED);
-  delay(250);
-  Serial.println("All NeoPixels OFF");
-  led->colorFillRange(led->Color( 0, 0,   0), 1, lastLED);
-  
+  led->testAllLEDs();
+ 
   game = new MigrationGame();
   game->begin(led, Serial);
 
@@ -102,6 +91,14 @@ String getConsole() {
       Serial.println();
       game->printRegions();
 
+    } else if (consoleInputStr == "T") {
+      // Test Pattern of the LEDs
+      led->testAllLEDs();
+
+    } else if (consoleInputStr == "W") {
+      // Toggle the LEDs all White
+      led->toggleAllLedsWhite();
+
     } else if (consoleInputStr == "H") {
       // list out histories
       game->printRegionHistory();
@@ -129,6 +126,8 @@ String getConsole() {
       Serial.println(F("  D - print list of Plants and Regions"));
       Serial.println(F("  H - print history Plants and Regions"));
       Serial.println(F("  G - print current state of Game"));
+      Serial.println(F("  T - Test the RGB of the LEDs"));
+      Serial.println(F("  W - Toggle all the LEDs White or Off"));
       // Serial.println(F("  L - print current LED Segment Status"));
       // Serial.println(F("  R - print next regions."));
       Serial.println(F("  0..7 - select corresponding plant"));

@@ -110,14 +110,14 @@ void LEDdisplay::printRingSegs() {
 
 void LEDdisplay::colorFillRange(unsigned long color, int beginPos, int endPos) {
 
-  #ifdef IFDEBUG
-    //IFDEBUG(_serial->printf("Running - LEDdisplay::%s(begin=%d, end=%d, color=0x%06x)\n", __func__, beginPos, endPos, color)); // has error in unsigned long
-    _serial->print("Running - LEDdisplay::"); _serial->print(__func__);
-      _serial->print("(0x"); _serial->print(color, HEX);
-      _serial->print(", "); _serial->print(beginPos);
-      _serial->print(", "); _serial->print(endPos);
-      _serial->println(")");
-  #endif
+#ifdef IFDEBUG
+  //IFDEBUG(_serial->printf("Running - LEDdisplay::%s(begin=%d, end=%d, color=0x%06x)\n", __func__, beginPos, endPos, color)); // has error in unsigned long
+  _serial->print("Running - LEDdisplay::"); _serial->print(__func__);
+  _serial->print("(0x"); _serial->print(color, HEX);
+  _serial->print(", "); _serial->print(beginPos);
+  _serial->print(", "); _serial->print(endPos);
+  _serial->println(")");
+#endif
 
   IFDEBUG_LED(_serial->printf("  setting LEDs: "));
   for (int pos = (beginPos - 1); pos < endPos; pos++) { // For each pixel in strip...
@@ -169,4 +169,27 @@ LedSegments LEDdisplay::findRegionsLedRange(Countries region) {
 
   IFDEBUG(_serial->printf("Ending  - LEDdisplay::%s()\n", __func__));
   return response;
+}
+
+void LEDdisplay::testAllLEDs() {
+  // Testing all Neopixels
+  int lastLED = (int) pgm_read_word(&ledSegs[SIZE_OF_LEDSEGS - 1].endPos);
+  colorFillRange(Color( 255, 0, 0), 1, lastLED);
+  delay(250);
+  colorFillRange(Color( 0, 255, 0), 1, lastLED);
+  delay(250);
+  colorFillRange(Color( 0, 0, 255), 1, lastLED);
+  delay(250);
+  colorFillRange(Color( 0, 0,   0), 1, lastLED);
+}
+
+#define DIM_FACTOR 4
+void LEDdisplay::toggleAllLedsWhite() {
+  // Testing all Neopixels
+  int lastLED = (int) pgm_read_word(&ledSegs[SIZE_OF_LEDSEGS - 1].endPos);
+  if (getPixelColor(lastLED - 1) > 0 ) {
+    colorFillRange(Color( 0, 0, 0), 1, lastLED);
+  } else {
+    colorFillRange(Color( 255 / DIM_FACTOR, 255 / DIM_FACTOR, 255 / DIM_FACTOR), 1, lastLED);
+  }
 }
