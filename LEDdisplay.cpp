@@ -138,7 +138,7 @@ void LEDdisplay::colorFillAll(unsigned long color) {
   _serial->println(")");
 #endif
 
-  colorFillRange(color, 0, Adafruit_NeoPixel::numPixels());
+  colorFillRange(color, (0 + 1), (Adafruit_NeoPixel::numPixels() + 1));
 
   IFDEBUG(_serial->printf("Ending  - LEDdisplay::%s()\n", __func__));
 }
@@ -174,13 +174,13 @@ LedSegments LEDdisplay::findRegionsLedRange(Countries region) {
 void LEDdisplay::testAllLEDs() {
   // Testing all Neopixels
   int lastLED = (int) pgm_read_word(&ledSegs[SIZE_OF_LEDSEGS - 1].endPos);
-  colorFillRange(Color( 255, 0, 0), 1, lastLED);
+  colorFillAll(Color( 255, 0, 0));
   delay(250);
-  colorFillRange(Color( 0, 255, 0), 1, lastLED);
+  colorFillAll(Color( 0, 255, 0));
   delay(250);
-  colorFillRange(Color( 0, 0, 255), 1, lastLED);
+  colorFillAll(Color( 0, 0, 255));
   delay(250);
-  colorFillRange(Color( 0, 0,   0), 1, lastLED);
+  colorFillAll(Color( 0, 0,   0));
 }
 
 #define DIM_FACTOR 4
