@@ -18,6 +18,11 @@ MigrationGame* game;
 
 StreamEx serial = Serial;
 
+#include "tpad.h"
+const uint8_t MPR121_INT = 12;  // pin 4 is the MPR121 interrupt on the Bare Touch Board
+
+tpad tpad;
+
 void setup()
 {
   //Serial.begin(115200);
@@ -46,6 +51,8 @@ void setup()
   led->printRingSegs();
 #endif
 
+  tpad.begin(Serial, MPR121_INT);
+
   // print build stat's.
   Serial.print(F("Build Date: ")); Serial.print(F(__DATE__)); Serial.print(F(" ")); Serial.println(F(__TIME__));
   serial.printf("game->gameState[0] = '%d'(%p)\n", game->gameState[0], stateStr[game->gameState[0]]);
@@ -57,6 +64,8 @@ void setup()
 
 void loop()
 {
+
+  int value = tpad.scan();
 
   String response = getConsole();
   if (response.length() > 0) {
