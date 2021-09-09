@@ -48,7 +48,6 @@ void setup()
   game->printPlantsWithLED();
   led->printRegions();
   led->printSegs();
-  led->printRingSegs();
 #endif
 
   tpad.begin(Serial, MPR121_INT);

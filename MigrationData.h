@@ -5,8 +5,6 @@
 #ifndef MigrationData_h
 #define MigrationData_h
 
-
-
 typedef enum {
   None               , //  0
   AFRICA             , //  1
@@ -188,83 +186,6 @@ static const LedSegments ledSegs[] PROGMEM = {
 
 };
 #define SIZE_OF_LEDSEGS LENGTH_OF_ARRAY(ledSegs)
-
-static const LedSegments RingSegs[] PROGMEM = {
-  {  99,   88,  None              }, //  0
-  {   1,   16,  AUSTRALIA         }, //  1
-  { 142,  157,  BRAZIL            }, //  7
-  { 236,  251,  PACIFIC_ISLANDS   }, // 12
-  { 290,  305,  SE_ASIA           }, // 15
-  { 313,  328,  CHINA             }, // 17
-  { 379,  394,  JAPAN             }, // 20
-  { 404,  419,  KOREA             }, // 22
-  { 469,  484,  MADAGASCAR        }, // 27
-  { 502,  517,  INDIA             }, // 29
-  { 540,  555,  EAST_AFRICA       }, // 31
-  { 576,  591,  ASIA              }, // 34
-  { 592,  607,  KAZAKHSTAN        }, // 35
-  { 632,  647,  TURKEY            }, // 37
-  { 662,  677,  EUROPE            }, // 39
-  { 681,  696,  SPAIN             }, // 41
-  { 701,  716,  BRITISH_ISLES     }, // 44
-  { 777,  792,  NEW_ENGLAND       }, // 49
-  { 793,  808,  CANADA            }, // 50
-  { 813,  828,  E_NORTH_AMERICA   }, // 52
-  { 838,  853,  ARIZONA_NEW_MEXICO}, // 54
-  { 854,  869,  CALIFORNIA        }, // 55
-  { 908,  923,  MEXICO            }, // 58
-  {1033, 1048,  SOUTH_CAROLINA    }, // 64
-  {1068, 1083,  W_SOUTH_AMERICA   }, // 67
-  {1169, 1184,  PANAMA            }, // 71
-  {1191, 1206,  BOLIVIA_PERU      }, // 73
-  {1213, 1228,  CHILE             }, // 75
-  {1234, 1249,  CARIBBEAN         }, // 77
-  {1302, 1317,  WEST_AFRICA       }, // 82
-  {1329, 1344,  MALI              }, // 86
-  {1374, 1389,  AFRICA            }  // 90
-};
-#define SIZE_OF_RINGSEGS LENGTH_OF_ARRAY(RingSegs)
-
-// static const int buttonLEDsegment[] PROGMEM = {
-// //LedSegments, ButtonID.
-             // 1, //  1
-             // 7, //  2
-            // 12, //  3
-            // 15, //  4
-            // 17, //  5
-            // 20, //  6
-            // 22, //  7
-            // 27, //  8
-            // 29, //  9
-            // 31, // 10
-            // 34, // 11
-            // 35, // 12
-            // 37, // 13
-            // 39, // 14
-            // 41, // 15
-            // 44, // 16
-            // 49, // 17
-            // 50, // 18
-            // 52, // 19
-            // 54, // 20
-            // 55, // 21
-            // 58, // 22
-            // 64, // 23
-            // 67, // 24
-            // 71, // 25
-            // 73, // 26
-            // 75, // 27
-            // 77, // 28
-            // 82, // 29
-            // 86, // 30
-            // 90, // 31
-// };
-
-// typedef struct {
-  // int segment;
-  // int endPos;
-// } ButtonLED;
-
 
 typedef struct {
   char textMSG[71+1];

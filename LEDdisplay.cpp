@@ -95,18 +95,6 @@ void LEDdisplay::advanceCurrentLed(int stepPos, int incr) {
   IFDEBUG(_serial->printf("Ending  - LEDdisplay::%s()\n", __func__));
 }
 
-void LEDdisplay::printRingSegs() {
-  IFDEBUG(_serial->printf("Running - LEDdisplay::%s()\n", __func__));
-
-  IFDEBUG(_serial->printf("  RingSegs[dd].startPos, endPos, buttonID =  \n"));
-  for (int idx = 0; idx < SIZE_OF_RINGSEGS; idx++) {
-    IFDEBUG(_serial->printf("       ..[%02d] = %04d, %04d, %04d, '%p'\n", idx, (int) pgm_read_word(&RingSegs[idx].startPos), (int) pgm_read_word(&RingSegs[idx].endPos), ((int) pgm_read_word(&RingSegs[idx].buttonID)), regions[((int) pgm_read_word(&RingSegs[idx].buttonID))]));
-  }
-
-  IFDEBUG(_serial->printf("Ending  - LEDdisplay::%s()\n", __func__));
-  IFDEBUG(_serial->printf("\n"));
-}
-
 void LEDdisplay::colorFillRange(unsigned long color, int beginPos, int endPos) {
 
 #ifdef IFDEBUG

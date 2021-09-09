@@ -42,7 +42,6 @@ class LEDdisplay : public Adafruit_NeoPixel {
     void begin(Stream &serial);
     void printRegions();
     void printSegs();
-    void printRingSegs();
     void advanceCurrentLed(int stepPos, int incr = 1);
     void colorFillRange(unsigned long color, int beginPos, int endPos);
     void colorFillAll(unsigned long color);
