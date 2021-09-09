@@ -71,7 +71,7 @@ int tpad::scan() {
         IFDEBUG(_serial->print(" identifier "));
         identifier = (uint8_t) pgm_read_word(&groups[addr].identifier[pin]);
         IFDEBUG(_serial->print((uint8_t) identifier, DEC));
-        IFDEBUG_LED(_serial->printf(" '%p' ", regions[identifier].name));
+        IFDEBUG_LED(_serial->printf(" '%p' ", regions[identifier]));
         IFDEBUG(_serial->println(" was just touched"));
                 
       } else if (chips[addr].isNewRelease(pin)) {
@@ -81,7 +81,7 @@ int tpad::scan() {
         IFDEBUG(_serial->print(pin, DEC));
         IFDEBUG(_serial->print(" identifier "));
         IFDEBUG(_serial->print((uint8_t) pgm_read_word(&groups[addr].identifier[pin]), DEC));
-        IFDEBUG_LED(_serial->printf(" '%p' ", regions[identifier].name));
+        IFDEBUG_LED(_serial->printf(" '%p' ", regions[identifier]));
         IFDEBUG(_serial->println(" was just released"));
       }
     }

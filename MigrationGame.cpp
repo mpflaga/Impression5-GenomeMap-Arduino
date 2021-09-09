@@ -85,22 +85,22 @@ int MigrationGame::lookforRegion(String *consoleInputStr) {
 
   IFDEBUG(_serial->printf("Running - MigrationGame::%s(%%s)\n", __func__));
   for (int idx = 0; idx < SIZE_OF_REGIONS; idx++) {
-    String str_P((const __FlashStringHelper*) regions[idx].name);
+    String str_P((const __FlashStringHelper*) regions[idx]);
     str_P.toUpperCase();
     if (str_P.startsWith(*consoleInputStr)) {
       response = idx;
-      IFDEBUG(_serial->printf("  %d) %p\n", ++matches, regions[idx].name));
+      IFDEBUG(_serial->printf("  %d) %p\n", ++matches, regions[idx]));
     }
   }
   if (response == -1) {
     for (int idx = 0; idx < SIZE_OF_REGIONS; idx++) {
-      IFDEBUG(_serial->printf("  %d) %p\n", ++matches, regions[idx].name));
+      IFDEBUG(_serial->printf("  %d) %p\n", ++matches, regions[idx]));
     }
   }
   if (matches > 1) {
     response = -1;
   }
-  IFDEBUG(_serial->printf("  Found Region %p(%d)\n", regions[response < 0 ? 0 : response].name, response));
+  IFDEBUG(_serial->printf("  Found Region %p(%d)\n", regions[response < 0 ? 0 : response], response));
   IFDEBUG(_serial->printf("Ending  - MigrationGame::%s() = %d\n", __func__, response));
   return response;
 }
@@ -193,7 +193,7 @@ void MigrationGame::printPlantsWithLED() {
 void MigrationGame::printRegions() {
   IFDEBUG(_serial->printf("Running - MigrationGame::%s()\n", __func__));
   for (int idx = 0; idx < SIZE_OF_REGIONS; idx++) {
-    IFDEBUG(_serial->printf("  %d) %p\n", ++idx, regions[idx].name));
+    IFDEBUG(_serial->printf("  %d) %p\n", ++idx, regions[idx]));
   }
   IFDEBUG(_serial->printf("Ending  - MigrationGame::%s()\n", __func__));
   IFDEBUG(_serial->printf("\n"));
@@ -203,7 +203,7 @@ void MigrationGame::printRegionHistory() {
   IFDEBUG(_serial->printf("Running - MigrationGame::%s()\n", __func__));
   IFDEBUG(_serial->println(F("History of Regions selected:")));
   for (int idx = (LENGTH_OF_ARRAY(region) - 1); idx >= 0 ; idx--) {
-    IFDEBUG(_serial->printf("  region[%d] = %p(%d)\n", idx, regions[region[idx]].name, region[idx]));
+    IFDEBUG(_serial->printf("  region[%d] = %p(%d)\n", idx, regions[region[idx]], region[idx]));
   }
   IFDEBUG(_serial->printf("Ending  - MigrationGame::%s()\n", __func__));
 }
@@ -299,7 +299,7 @@ bool MigrationGame::checkIfMatchCurrentDesiredRegions(int nextRegionIdx) {
       int nextButtonID = (int) pgm_read_word(&ledSegs[nextLedSeg].buttonID);
       if (nextLedSeg > 0) {
         // when one is found in list, then print it.
-        IFDEBUG(_serial->printf("  %p(R%d/L%d),\n", regions[nextButtonID].name, nextLedSeg, nextButtonID));
+        IFDEBUG(_serial->printf("  %p(R%d/L%d),\n", regions[nextButtonID], nextLedSeg, nextButtonID));
         if (nextButtonID == nextRegionIdx) {
           // tally up list that is printed
           bResponse = true;
@@ -429,7 +429,7 @@ void MigrationGame::checkGameStateMachine() {
     case PLANT_ACCEPTED_WAITING_FOR_BUTTON:
       if (prv_region != region[0]) {
         _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
-        _serial->printf("Accepting new Region %p(%d)\n", regions[region[0]].name, region[0]);
+        _serial->printf("Accepting new Region %p(%d)\n", regions[region[0]], region[0]);
         prv_region = region[0];
 
         bool correctRegion = checkIfMatchCurrentDesiredRegions(region[0]);

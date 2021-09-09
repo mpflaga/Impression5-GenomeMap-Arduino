@@ -62,12 +62,11 @@ void LEDdisplay::begin(Stream &serial) {
 void LEDdisplay::printRegions() {
   IFDEBUG(_serial->printf("Running - LEDdisplay::%s()\n", __func__));
 
-  IFDEBUG(_serial->printf("  regions[dd].chipID, channel, LEDseg, name =  \n"));
+  IFDEBUG(_serial->printf("  regions[dd] =  \n"));
   for (int idx = 0; idx < SIZE_OF_REGIONS; idx++) {
-    IFDEBUG(_serial->printf("      ..[%02d] = 0x%02x, %02d, %02d, '%p'\n", idx, (int) pgm_read_word(&regions[idx].chipID), (int) pgm_read_word(&regions[idx].channel), (int) pgm_read_word(&regions[idx].LEDseg), regions[idx].name));
+    IFDEBUG(_serial->printf("      ..[%02d] = '%p'\n", idx, regions[idx]));
   }
   IFDEBUG(_serial->printf("Number of regions = %d\n", SIZE_OF_REGIONS));
-  IFDEBUG(_serial->printf("Last chipID value = 0x%02x\n", (int) pgm_read_word(&regions[SIZE_OF_REGIONS - 1].chipID)));
 
   IFDEBUG(_serial->printf("Ending  - LEDdisplay::%s()\n", __func__));
   IFDEBUG(_serial->printf("\n"));
@@ -78,7 +77,7 @@ void LEDdisplay::printSegs() {
 
   IFDEBUG(_serial->printf("  ledSegs[dd].startPos, endPos, buttonID =  \n"));
   for (int idx = 0; idx < SIZE_OF_LEDSEGS; idx++) {
-    IFDEBUG(_serial->printf("       ..[%02d] = %04d, %04d, %04d, '%p'\n", idx, (int) pgm_read_word(&ledSegs[idx].startPos), (int) pgm_read_word(&ledSegs[idx].endPos), ((int) pgm_read_word(&ledSegs[idx].buttonID)), regions[((int) pgm_read_word(&ledSegs[idx].buttonID))].name));
+    IFDEBUG(_serial->printf("       ..[%02d] = %04d, %04d, %04d, '%p'\n", idx, (int) pgm_read_word(&ledSegs[idx].startPos), (int) pgm_read_word(&ledSegs[idx].endPos), ((int) pgm_read_word(&ledSegs[idx].buttonID)), regions[((int) pgm_read_word(&ledSegs[idx].buttonID))]));
   }
   IFDEBUG(_serial->printf("Number of ledSegs = %d\n", SIZE_OF_LEDSEGS));
   IFDEBUG(_serial->printf("Last endpos value = %d\n", (int) pgm_read_word(&ledSegs[SIZE_OF_LEDSEGS - 1].endPos)));
@@ -91,7 +90,7 @@ void LEDdisplay::advanceCurrentLed(int stepPos, int incr) {
   IFDEBUG(_serial->printf("Running - LEDdisplay::%s(%d)\n", __func__, incr));
 
   IFDEBUG(_serial->printf("  ledSegs[dd].startPos, endPos, buttonID =  \n"));
-  IFDEBUG(_serial->printf("       ..[%02d] = %04d, %04d, %04d, '%p'\n", stepPos, (int) pgm_read_word(&ledSegs[stepPos].startPos), (int) pgm_read_word(&ledSegs[stepPos].endPos), ((int) pgm_read_word(&ledSegs[stepPos].buttonID)), regions[((int) pgm_read_word(&ledSegs[stepPos].buttonID))].name));
+  IFDEBUG(_serial->printf("       ..[%02d] = %04d, %04d, %04d, '%p'\n", stepPos, (int) pgm_read_word(&ledSegs[stepPos].startPos), (int) pgm_read_word(&ledSegs[stepPos].endPos), ((int) pgm_read_word(&ledSegs[stepPos].buttonID)), regions[((int) pgm_read_word(&ledSegs[stepPos].buttonID))]));
 
   IFDEBUG(_serial->printf("Ending  - LEDdisplay::%s()\n", __func__));
 }
@@ -101,7 +100,7 @@ void LEDdisplay::printRingSegs() {
 
   IFDEBUG(_serial->printf("  RingSegs[dd].startPos, endPos, buttonID =  \n"));
   for (int idx = 0; idx < SIZE_OF_RINGSEGS; idx++) {
-    IFDEBUG(_serial->printf("       ..[%02d] = %04d, %04d, %04d, '%p'\n", idx, (int) pgm_read_word(&RingSegs[idx].startPos), (int) pgm_read_word(&RingSegs[idx].endPos), ((int) pgm_read_word(&RingSegs[idx].buttonID)), regions[((int) pgm_read_word(&RingSegs[idx].buttonID))].name));
+    IFDEBUG(_serial->printf("       ..[%02d] = %04d, %04d, %04d, '%p'\n", idx, (int) pgm_read_word(&RingSegs[idx].startPos), (int) pgm_read_word(&RingSegs[idx].endPos), ((int) pgm_read_word(&RingSegs[idx].buttonID)), regions[((int) pgm_read_word(&RingSegs[idx].buttonID))]));
   }
 
   IFDEBUG(_serial->printf("Ending  - LEDdisplay::%s()\n", __func__));
@@ -152,9 +151,9 @@ LedSegments LEDdisplay::findRegionsLedRange(Countries region) {
   IFDEBUG_LED(_serial->printf("  ledSegs[dd].startPos, endPos, buttonID =  \n"));
   for (int idx = 0; idx < LENGTH_OF_ARRAY(ledSegs); idx++) {
     Countries ledSegOffset = ((int) pgm_read_word(&ledSegs[idx].buttonID));
-    //IFDEBUG_LED(_serial->printf("       ..[%02d] = %04d, %04d, %04d, '%p'\n", idx, (int) pgm_read_word(&ledSegs[idx].startPos), (int) pgm_read_word(&ledSegs[idx].endPos), (int) pgm_read_word(&ledSegs[idx].buttonID), regions[ledSegOffset].name));
+    //IFDEBUG_LED(_serial->printf("       ..[%02d] = %04d, %04d, %04d, '%p'\n", idx, (int) pgm_read_word(&ledSegs[idx].startPos), (int) pgm_read_word(&ledSegs[idx].endPos), (int) pgm_read_word(&ledSegs[idx].buttonID), regions[ledSegOffset]));
     if (ledSegOffset == region) {
-      IFDEBUG(_serial->printf("       ..[%02d] = %04d, %04d, %04d, '%p'\n", idx, (int) pgm_read_word(&ledSegs[idx].startPos), (int) pgm_read_word(&ledSegs[idx].endPos), (int) pgm_read_word(&ledSegs[idx].buttonID), regions[ledSegOffset].name));
+      IFDEBUG(_serial->printf("       ..[%02d] = %04d, %04d, %04d, '%p'\n", idx, (int) pgm_read_word(&ledSegs[idx].startPos), (int) pgm_read_word(&ledSegs[idx].endPos), (int) pgm_read_word(&ledSegs[idx].buttonID), regions[ledSegOffset]));
       response.startPos = (int) pgm_read_word(&ledSegs[idx].startPos);
       response.endPos = (int) pgm_read_word(&ledSegs[idx].endPos);
       response.buttonID = idx;

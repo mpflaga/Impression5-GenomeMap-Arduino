@@ -169,7 +169,7 @@ String getConsole() {
         Serial.print(F("No Change"));
       } else {
         game->updateRegion(nextRegionIdx);
-        serial.printf("Accepted entered Region %p(%d)\n", regions[game->region[0]].name, game->region[0]);
+        serial.printf("Accepted entered Region %p(%d)\n", regions[game->region[0]], game->region[0]);
       }
     }
     response = consoleInputStr;
