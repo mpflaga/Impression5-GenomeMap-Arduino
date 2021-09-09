@@ -39,7 +39,7 @@ const mprs groups[] PROGMEM = {
     {20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20}, //tthresh
     {10,   10,   10,   10,   10,   10,   10,   10,   10,   10,   10,   10}, //rthresh
   //{13,   14,   15,   16,   17,   18,   19,   20,   21,   22,   23,   24}, //identifier
-    {TURKEY, 0, 0, MADAGASCAR, EAST_AFRICA, AFRICA, 0, MALI, WEST_AFRICA, SPAIN, BRITISH_ISLES, EUROPE}, //identifier
+    {TURKEY, 0, 0, MADAGASCAR, EAST_AFRICA, AFRICA, WEST_AFRICA, MALI, 0, SPAIN, BRITISH_ISLES, EUROPE}, //identifier
   },
   { 0x5C,
     {20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20}, //tthresh
