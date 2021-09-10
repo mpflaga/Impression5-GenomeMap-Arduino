@@ -58,33 +58,39 @@ void tpad::begin(Stream &serial, int IRQpin) {
 }
 
 int tpad::scan() {
-  uint8_t identifier;
+  int identifier = 0;
   
   for (int addr = 0; addr < 4; addr++) {
     chips[addr].updateAll();
-    for (int pin = 0; pin < 12; pin++) {
+
+    for (int pin = 0; pin < numElectrodes; pin++) {
+
       if (chips[addr].isNewTouch(pin)) {
-        IFDEBUG(_serial->print("chip "));
-        IFDEBUG(_serial->print(addr, DEC));
-        IFDEBUG(_serial->print(" electrode "));
-        IFDEBUG(_serial->print(pin, DEC));
-        IFDEBUG(_serial->print(" identifier "));
-        identifier = (uint8_t) pgm_read_word(&groups[addr].identifier[pin]);
-        IFDEBUG(_serial->print((uint8_t) identifier, DEC));
-        IFDEBUG_LED(_serial->printf(" '%p' ", regions[identifier]));
-        IFDEBUG(_serial->println(" was just touched"));
-                
+        identifier = (int8_t) pgm_read_word(&groups[addr].identifier[pin]);
       } else if (chips[addr].isNewRelease(pin)) {
+        identifier = -(int8_t) pgm_read_word(&groups[addr].identifier[pin]);
+      } else {
+        identifier = 0;
+      }
+
+      if (identifier != 0) {
         IFDEBUG(_serial->print("chip "));
         IFDEBUG(_serial->print(addr, DEC));
         IFDEBUG(_serial->print(" electrode "));
         IFDEBUG(_serial->print(pin, DEC));
         IFDEBUG(_serial->print(" identifier "));
-        IFDEBUG(_serial->print((uint8_t) pgm_read_word(&groups[addr].identifier[pin]), DEC));
-        IFDEBUG_LED(_serial->printf(" '%p' ", regions[identifier]));
-        IFDEBUG(_serial->println(" was just released"));
+        IFDEBUG(_serial->print(identifier, DEC));
+        IFDEBUG_LED(_serial->printf(" '%p' ", regions[abs(identifier)]));
+        if (identifier > 0) {
+          IFDEBUG(_serial->println(" was just touched"));
+        } else {
+          IFDEBUG(_serial->println(" was just released"));
+        }
+        return identifier;
       }
     }
   }
-  return 0;
+  return identifier;
 }
+
+

@@ -64,7 +64,11 @@ void setup()
 void loop()
 {
 
-  int value = tpad.scan();
+  int nextRegionIdx = tpad.scan();
+  if (nextRegionIdx > 0) {
+    game->updateRegion(nextRegionIdx);
+    serial.printf("TouchPad accepted entered Region index %d %p(%d)\n", nextRegionIdx, regions[game->region[0]], game->region[0]);
+  }
 
   String response = getConsole();
   if (response.length() > 0) {
@@ -168,7 +172,7 @@ String getConsole() {
         Serial.print(F("No Change"));
       } else {
         game->updateRegion(nextRegionIdx);
-        serial.printf("Accepted entered Region %p(%d)\n", regions[game->region[0]], game->region[0]);
+        serial.printf("Console accepted entered Region index %d %p(%d)\n", nextRegionIdx, regions[game->region[0]], game->region[0]);
       }
     }
     response = consoleInputStr;
