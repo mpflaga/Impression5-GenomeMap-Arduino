@@ -16,7 +16,7 @@
 
 #ifndef IFDEBUG_LED
 #define IFDEBUG_LED(...) ((void)((DEBUG_LEVEL_LED) && (__VA_ARGS__, 0)))
-#define DEBUG_LEVEL_LED 1 // set to 1 to compile in Serial Debug prints
+#define DEBUG_LEVEL_LED 0 // set to 1 to compile in Serial Debug prints
 #endif
 
 #ifndef LEDdisplay_h
