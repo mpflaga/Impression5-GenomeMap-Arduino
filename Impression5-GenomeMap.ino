@@ -23,6 +23,20 @@ const uint8_t MPR121_INT = 12;  // pin 4 is the MPR121 interrupt on the Bare Tou
 
 tpad tpad;
 
+#include "PhotoCellNumber.h"
+Pins ldrPins[] = {
+  // {Signal Pin, GND Pin, Threshold}
+  // Note - GND = 0 assumes LDR is connected to real ground.
+  {A0, A1, 700}, 
+  {A2, A3, 700},
+  {A4, A5, 700}
+};
+
+// instanciate Driver to monitor array of photocells
+PhotoCellNumber PhotoCellNumber(ldrPins, sizeof(ldrPins) / sizeof(ldrPins[0]), 10);
+int value_prv = 0; // value to monitor change in photo cells composite number
+
+
 void setup()
 {
   //Serial.begin(115200);
@@ -47,10 +61,33 @@ void setup()
 #if 0  // print out all data structures (if debug is enabled).
   game->printPlantsWithLED();
   led->printRegions();
-  led->printSegs();
 #endif
 
   tpad.begin(MPR121_INT);
+
+  PhotoCellNumber.setInterval(50, 500); // set sample period and threshold for all bits.`
+  PhotoCellNumber.ldr[0]->setThreshold(501); // set threshold for individual bits.
+  PhotoCellNumber.ldr[1]->setThreshold(502);
+  PhotoCellNumber.ldr[2]->setThreshold(503);
+
+  PhotoCellNumber.setInvert(false); // invert all bits. default is false.
+  // PhotoCellNumber.ldr[0]->setInvert(true); // invert individual bits.
+  // PhotoCellNumber.ldr[1]->setInvert(true);
+  // PhotoCellNumber.ldr[2]->setInvert(true);
+
+  for (int i = 0; i < sizeof(ldrPins) / sizeof(ldrPins[0]); i++)
+  {
+    Serial.print("PhotoCellNumber.ldr["); Serial.print(i); Serial.print("] = ");
+    PhotoCellNumber.ldr[i]->PrintPins();
+  }
+  Serial.println();
+  PhotoCellNumber.printArray();
+
+  Serial.print("initial value = "); Serial.println(PhotoCellNumber.value);
+  value_prv = PhotoCellNumber.value;
+  #define PRINT_TIME_STAMPS 0 // 1 = ON, 0 = OFF
+  #define PRINT_VALUES 0
+  PhotoCellNumber.setDebugMask( PRINT_TIME_STAMPS<<1 | PRINT_VALUES<<0 );
 
   // print build stat's.
   Serial.print(F("Build Date: ")); Serial.print(F(__DATE__)); Serial.print(F(" ")); Serial.println(F(__TIME__));
@@ -68,6 +105,22 @@ void loop()
   if (nextRegionIdx > 0) {
     game->updateRegion(nextRegionIdx);
     serial.printf("TouchPad accepted entered Region index %d %p(%d)\n", nextRegionIdx, regions[game->region[0]], game->region[0]);
+  }
+
+  PhotoCellNumber.update();
+  if (PhotoCellNumber.value != value_prv) {
+    Serial.print("New value = "); Serial.println(PhotoCellNumber.value);
+    value_prv = PhotoCellNumber.value;
+
+    // when positive value will be index of plant.
+    if (game->updatePlant(value_prv)) {
+      // when a different plant, update settings
+      Serial.println(F("Plant Updated"));
+
+    } else {
+      // when same plant, do nothing
+      Serial.println(F("No Change in Plant"));
+    }
   }
 
   String response = getConsole();
