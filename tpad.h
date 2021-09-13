@@ -67,12 +67,11 @@ class tpad : public MPR121_type {
   public:
     tpad();
     ~tpad();
-    void begin(Stream &serial, int);
+    void begin(int);
     int scan();
     int interruptPin;
 
   private:
-    StreamEx* _serial;
     MPR121_type chips[4];
 
 };

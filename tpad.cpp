@@ -1,6 +1,8 @@
 #include "Arduino.h"
 #include "tpad.h"
 #include <avr/pgmspace.h>
+#include "pgmStrToRAM.h"
+
 
 tpad::tpad() {
 }
@@ -8,45 +10,44 @@ tpad::tpad() {
 tpad::~tpad() {
 }
 
-void tpad::begin(Stream &serial, int IRQpin) {
-  IFDEBUG(_serial = &serial);
+void tpad::begin(int IRQpin) {
   
   interruptPin = IRQpin;
   for (int offset = 0; offset < 4; offset++) {
     if (!chips[offset].begin(offset + 0x5A)) {
-      IFDEBUG(_serial->println("error setting up MPR121"));
+      Serial.println("error setting up MPR121");
       switch (chips[offset].getError()) {
         case NO_ERROR:
-          IFDEBUG(_serial->println("no error"));
+          Serial.println("no error");
           break;
         case ADDRESS_UNKNOWN:
-          IFDEBUG(_serial->println("incorrect address"));
+          Serial.println("incorrect address");
           break;
         case READBACK_FAIL:
-          IFDEBUG(_serial->println("readback failure"));
+          Serial.println("readback failure");
           break;
         case OVERCURRENT_FLAG:
-          IFDEBUG(_serial->println("overcurrent on REXT pin"));
+          Serial.println("overcurrent on REXT pin");
           break;
         case OUT_OF_RANGE:
-          IFDEBUG(_serial->println("electrode out of range"));
+          Serial.println("electrode out of range");
           break;
         case NOT_INITED:
-          IFDEBUG(_serial->println("not initialised"));
+          Serial.println("not initialised");
           break;
         default:
-          IFDEBUG(_serial->println("unknown error"));
+          Serial.println("unknown error");
           break;
       }
       while (1);
     } else {
-      IFDEBUG(_serial->print("MPR121 ")); IFDEBUG(_serial->print(offset)); IFDEBUG(_serial->println(" started"));
+      Serial.print("MPR121 "); Serial.print(offset); Serial.println(" started");
     }
     chips[offset].setInterruptPin(interruptPin);
-    IFDEBUG(_serial->print("Initializing groups MPR #0x"));
-    //    IFDEBUG(_serial->print(offset));
-    IFDEBUG(_serial->print((byte) pgm_read_word(&groups[offset].address), HEX));
-    IFDEBUG(_serial->println());
+    Serial.print("Initializing groups MPR #0x");
+
+    Serial.print((byte) pgm_read_word(&groups[offset].address), HEX);
+    Serial.println();
 
     chips[offset].setFFI(FFI_10);
     chips[offset].setSFI(SFI_10);
@@ -74,17 +75,19 @@ int tpad::scan() {
       }
 
       if (identifier != 0) {
-        IFDEBUG(_serial->print("chip "));
-        IFDEBUG(_serial->print(addr, DEC));
-        IFDEBUG(_serial->print(" electrode "));
-        IFDEBUG(_serial->print(pin, DEC));
-        IFDEBUG(_serial->print(" identifier "));
-        IFDEBUG(_serial->print(identifier, DEC));
-        IFDEBUG_LED(_serial->printf(" '%p' ", regions[abs(identifier)]));
+        Serial.print(F("chip "));
+        Serial.print(addr, DEC);
+        Serial.print(F(" electrode "));
+        Serial.print(pin, DEC);
+        Serial.print(F(" identifier "));
+        Serial.print(identifier, DEC);
+        Serial.print(F(" '"));
+        Serial.print(pgmStrToRAM(regions[abs(identifier)]));
+        Serial.print(F("' "));
         if (identifier > 0) {
-          IFDEBUG(_serial->println(" was just touched"));
+          Serial.println(F(" was just touched"));
         } else {
-          IFDEBUG(_serial->println(" was just released"));
+          Serial.println(F(" was just released"));
         }
         return identifier;
       }

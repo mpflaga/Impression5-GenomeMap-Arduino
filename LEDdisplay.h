@@ -39,10 +39,6 @@ class LEDdisplay : public Adafruit_NeoPixel {
     int currentLedOffset;
     int displaySize;
     void begin();
-    void begin(Stream &serial);
-    void printRegions();
-    void printSegs();
-    void advanceCurrentLed(int stepPos, int incr = 1);
     void colorFillRange(unsigned long color, int beginPos, int endPos);
     void colorFillAll(unsigned long color);
     LedSegments findRegionsLedRange(Countries region);
@@ -55,8 +51,6 @@ class LEDdisplay : public Adafruit_NeoPixel {
     void showCaseMode();
 
   private:
-    StreamEx* _serial;
-
     unsigned long previousMillis = 0;        // will store last time LED was updated
     const long interval = 100;               // interval at which to blink (milliseconds)
 

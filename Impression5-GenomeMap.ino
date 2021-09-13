@@ -37,7 +37,7 @@ void setup()
   Serial.print(F("Instanced ")); Serial.print(lastLED); Serial.println(F(" LED NeoPixel strip."));
 
   led = new LEDdisplay(lastLED, LED_PIN, NEO_GRB + NEO_KHZ800);
-  led->begin(Serial);
+  led->begin();
 
   led->testAllLEDs();
 
@@ -50,7 +50,7 @@ void setup()
   led->printSegs();
 #endif
 
-  tpad.begin(Serial, MPR121_INT);
+  tpad.begin(MPR121_INT);
 
   // print build stat's.
   Serial.print(F("Build Date: ")); Serial.print(F(__DATE__)); Serial.print(F(" ")); Serial.println(F(__TIME__));
@@ -119,8 +119,8 @@ String getConsole() {
       // list out histories
       game->printRegionHistory();
       game->printPlantHistory();
-      serial.printf("  hopPos  = %d\n", game->hopPos);
-      serial.printf("  stepPos = %d\n", game->stepPos);
+      Serial.print(F("  hopPos  = ")); Serial.println(game->hopPos);
+      Serial.print(F("  stepPos = ")); Serial.println(game->stepPos);
       serial.printf("  game->prv_gameState= '%p'(%d)\n", stateStr[game->prv_gameState], game->prv_gameState);
       game->printGameStateHistory();
 
