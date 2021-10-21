@@ -7,37 +7,37 @@
 
 typedef enum {
   None               , //  0
-  AFRICA             , //  1
-  ARIZONA_NEW_MEXICO , //  2
-  ASIA               , //  3
-  AUSTRALIA          , //  4
-  BOLIVIA_PERU       , //  5
-  BRAZIL             , //  6
-  BRITISH_ISLES      , //  7
-  CALIFORNIA         , //  8
-  CANADA             , //  9
-  CARIBBEAN          , // 10
-  CHILE              , // 11
-  CHINA              , // 12
-  E_NORTH_AMERICA    , // 13
-  EAST_AFRICA        , // 14
-  EUROPE             , // 15
-  INDIA              , // 16
-  JAPAN              , // 17
-  KAZAKHSTAN         , // 18
-  KOREA              , // 19
-  MADAGASCAR         , // 20
-  MALI               , // 21
-  MEXICO             , // 22
-  NEW_ENGLAND        , // 23
-  PACIFIC_ISLANDS    , // 24
-  PANAMA             , // 25
-  SE_ASIA            , // 26
-  SOUTH_CAROLINA     , // 27
-  SPAIN              , // 28
-  TURKEY             , // 29
-  W_SOUTH_AMERICA    , // 30
-  WEST_AFRICA          // 31
+  AFRICA             , //  1 0x5b-05
+  ARIZONA_NEW_MEXICO , //  2 0x5d-05
+  ASIA               , //  3 0x5a-07
+  AUSTRALIA          , //  4 0x5a-00
+  BOLIVIA_PERU       , //  5 0x5c-00
+  BRAZIL             , //  6 0x5c-09
+  BRITISH_ISLES      , //  7 0x5b-10
+  CALIFORNIA         , //  8 0x5d-04
+  CANADA             , //  9 0x5c-05
+  CARIBBEAN          , // 10 0x5c-03
+  CHILE              , // 11 0x5c-11
+  CHINA              , // 12 0x5a-10
+  E_NORTH_AMERICA    , // 13 0x5d-06
+  EAST_AFRICA        , // 14 0x5b-04
+  EUROPE             , // 15 0x5b-11
+  INDIA              , // 16 0x5a-05
+  JAPAN              , // 17 0x5a-09
+  KAZAKHSTAN         , // 18 0x5a-06
+  KOREA              , // 19 0x5a-08
+  MADAGASCAR         , // 20 0x5b-03
+  MALI               , // 21 0x5d-08
+  MEXICO             , // 22 0x5b-07
+  NEW_ENGLAND        , // 23 0x5c-07
+  PACIFIC_ISLANDS    , // 24 0x5a-11
+  PANAMA             , // 25 0x5c-02
+  SE_ASIA            , // 26 0x5a-01
+  SOUTH_CAROLINA     , // 27 0x5d-10
+  SPAIN              , // 28 0x5b-09
+  TURKEY             , // 29 0x5b-00
+  W_SOUTH_AMERICA    , // 30 0x5c-01
+  WEST_AFRICA          // 31 0x5b-06
 } Countries;
 
 // needs to be in same order as Countries.
