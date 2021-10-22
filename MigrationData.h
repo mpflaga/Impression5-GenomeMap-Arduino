@@ -213,62 +213,8 @@ static const plantStruct plants[] PROGMEM = {
     }
   },
   {                          // plant #1
-    "Maize",                 // plantName
-    1,                       // placeCardID
-    58,                      // beginRingID
-    {                        // Hops
-      {                      // Hop_1
-        "Step 2 (guest touches W. SOUTH AMERICA)", // textMSG
-        {                    // nextButtons
-          67
-        },
-        {                    // steps
-          65, 66
-        }
-      },                     // end Hop_1
-      {                      // Hop_2
-        "Step 3 (guest touches ARIZONA/NEW MEXICO)", // textMSG
-        {                    // nextButtons
-          54
-        },
-        {                    // steps
-          57 + DESCEND
-        }
-      },                     // end Hop_2
-      {                      // Hop_3
-        "Step 4 (guest touches E. NORTH AMERICA)", // textMSG
-        {                    // nextButtons
-          52
-        },
-        {                    // steps
-          53 + DESCEND
-        }
-      },                     // end Hop_3
-      {                      // Hop_4
-        "Step 5 (guest touches CANADA)", // textMSG
-        {                    // nextButtons
-          50
-        },
-        {                    // steps
-          51 + DESCEND
-        }
-      },                     // end Hop_4
-      {                      // Hop_5
-        "Step 6 (guest touches SPAIN or AFRICA or ASIA)", // textMSG
-        {                    // nextButtons
-          41, 90, 34
-
-        },
-        {                    // steps
-          59, 62 + DESCEND, 61 + DESCEND, 80 + DESCEND, 84, 88, 89, 4 + DESCEND, 3 + DESCEND, 10, 25 + DESCEND, 24 + DESCEND, 33
-        }
-      }
-    }                        // end Hops
-  },                         // end plant
-
-  {                          // plant #2
     "Potato",                // plantName
-    2,                       // placeCardID
+    1,                       // placeCardID
     73,                      // beginRingID
     {                        // Hops
       {                      // Hop_1
@@ -329,79 +275,9 @@ static const plantStruct plants[] PROGMEM = {
     }                        // end Hops
   },                         // end plant
 
-  {                          // plant #3
-    "Apple",                 // plantName
-    3,                       // placeCardID
-    35,                      // beginRingID
-    {                        // Hops
-      {                      // Hop_1
-        "Step 2 (guest touches TURKEY)", // textMSG
-        {                    // nextButtons
-          37
-        },
-        {                    // steps
-          36
-        }
-      },                     // end Hop_1
-      {                      // Hop_2
-        "Step 3 (guest touches EUROPE)", // textMSG
-        {                    // nextButtons
-          39
-        },
-        {                    // steps
-          38
-        }
-      },                     // end Hop_2
-      {                      // Hop_3
-        "Step 4 (guest touches NEW ENGLAND)", // textMSG
-        {                    // nextButtons
-          49
-        },
-        {                    // steps
-          43, 47, 48
-        }
-      }
-    }                        // end Hops
-  },                         // end plant
-
-  {                          // plant #4
-    "Asian_Rice",            // plantName
-    4,                       // placeCardID
-    17,                      // beginRingID
-    {                        // Hops
-      {                      // Hop_1
-        "Step 2 (guest touches INDIA)", // textMSG
-        {                    // nextButtons
-          29
-        },
-        {                    // steps
-          23, 32 + DESCEND
-        }
-      },                     // end Hop_1
-      {                      // Hop_2
-        "Step 3 (guest touches JAPAN KOREA or SE ASIA)", // textMSG
-        {                    // nextButtons
-          20, 22, 15
-        },
-        {                    // steps
-          19, 21, 16 + DESCEND
-        }
-      },                     // end Hop_2
-      {                      // Hop_3
-        "Step 4 (guest touches CALIFORNIA)", // textMSG
-        {                    // nextButtons
-          55
-        },
-        {                    // steps
-          18, 56 + DESCEND
-        }
-      }
-    }                        // end Hops
-  },                         // end plant
-
-  {                          // plant #5
+  {                          // plant #2
     "African_Rice",          // plantName
-    5,                       // placeCardID
+    2,                       // placeCardID
     86,                      // beginRingID
     {                        // Hops
       {                      // Hop_1
@@ -434,9 +310,98 @@ static const plantStruct plants[] PROGMEM = {
     }                        // end Hops
   },                         // end plant
 
-  {                          // plant #6
+  {                          // plant #3
+    "Maize",                 // plantName
+    3,                       // placeCardID
+    58,                      // beginRingID
+    {                        // Hops
+      {                      // Hop_1
+        "Step 2 (guest touches W. SOUTH AMERICA)", // textMSG
+        {                    // nextButtons
+          67
+        },
+        {                    // steps
+          65, 66
+        }
+      },                     // end Hop_1
+      {                      // Hop_2
+        "Step 3 (guest touches ARIZONA/NEW MEXICO)", // textMSG
+        {                    // nextButtons
+          54
+        },
+        {                    // steps
+          57 + DESCEND
+        }
+      },                     // end Hop_2
+      {                      // Hop_3
+        "Step 4 (guest touches E. NORTH AMERICA)", // textMSG
+        {                    // nextButtons
+          52
+        },
+        {                    // steps
+          53 + DESCEND
+        }
+      },                     // end Hop_3
+      {                      // Hop_4
+        "Step 5 (guest touches CANADA)", // textMSG
+        {                    // nextButtons
+          50
+        },
+        {                    // steps
+          51 + DESCEND
+        }
+      },                     // end Hop_4
+      {                      // Hop_5
+        "Step 6 (guest touches SPAIN or AFRICA or ASIA)", // textMSG
+        {                    // nextButtons
+          41, 90, 34
+
+        },
+        {                    // steps
+          59, 62 + DESCEND, 61 + DESCEND, 80 + DESCEND, 84, 88, 89, 4 + DESCEND, 3 + DESCEND, 10, 25 + DESCEND, 24 + DESCEND, 33
+        }
+      }
+    }                        // end Hops
+  },                         // end plant
+
+  {                          // plant #4
+    "Apple",                 // plantName
+    4,                       // placeCardID
+    35,                      // beginRingID
+    {                        // Hops
+      {                      // Hop_1
+        "Step 2 (guest touches TURKEY)", // textMSG
+        {                    // nextButtons
+          37
+        },
+        {                    // steps
+          36
+        }
+      },                     // end Hop_1
+      {                      // Hop_2
+        "Step 3 (guest touches EUROPE)", // textMSG
+        {                    // nextButtons
+          39
+        },
+        {                    // steps
+          38
+        }
+      },                     // end Hop_2
+      {                      // Hop_3
+        "Step 4 (guest touches NEW ENGLAND)", // textMSG
+        {                    // nextButtons
+          49
+        },
+        {                    // steps
+          43, 47, 48
+        }
+      }
+    }                        // end Hops
+  },                         // end plant
+
+  {                          // plant #5
     "Indo_Atlantic_Coconut", // plantName
-    6,                       // placeCardID
+    5,                       // placeCardID
     29,                      // beginRingID
     {                        // Hops
       {                      // Hop_1
@@ -455,6 +420,41 @@ static const plantStruct plants[] PROGMEM = {
         },
         {                    // steps
           28 + DESCEND, 25, 10 + DESCEND, 3, 4, 88 + DESCEND, 87 + DESCEND, 92, 5, 6, 9 + DESCEND, 78 + DESCEND
+        }
+      }
+    }                        // end Hops
+  },                         // end plant
+
+  {                          // plant #6
+    "Asian_Rice",            // plantName
+    6,                       // placeCardID
+    17,                      // beginRingID
+    {                        // Hops
+      {                      // Hop_1
+        "Step 2 (guest touches INDIA)", // textMSG
+        {                    // nextButtons
+          29
+        },
+        {                    // steps
+          23, 32 + DESCEND
+        }
+      },                     // end Hop_1
+      {                      // Hop_2
+        "Step 3 (guest touches JAPAN KOREA or SE ASIA)", // textMSG
+        {                    // nextButtons
+          20, 22, 15
+        },
+        {                    // steps
+          19, 21, 16 + DESCEND
+        }
+      },                     // end Hop_2
+      {                      // Hop_3
+        "Step 4 (guest touches CALIFORNIA)", // textMSG
+        {                    // nextButtons
+          55
+        },
+        {                    // steps
+          18, 56 + DESCEND
         }
       }
     }                        // end Hops

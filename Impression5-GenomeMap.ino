@@ -109,17 +109,27 @@ void loop()
 
   PhotoCellNumber.update();
   if (PhotoCellNumber.value != value_prv) {
-    Serial.print("New value = "); Serial.println(PhotoCellNumber.value);
     value_prv = PhotoCellNumber.value;
 
-    // when positive value will be index of plant.
-    if (game->updatePlant(value_prv)) {
-      // when a different plant, update settings
-      Serial.println(F("Plant Updated"));
-
-    } else {
-      // when same plant, do nothing
-      Serial.println(F("No Change in Plant"));
+    int nextPlantIdx = -1;  //= game->lookforPlant(value_prv) + 1;
+    for (int idx = 0; ((idx < SIZE_OF_PLANTS) && (nextPlantIdx < 0)); idx++) {
+      if (PhotoCellNumber.value == (int) pgm_read_word(&plants[idx].placeCardID)) {
+        nextPlantIdx = idx;
+      }
+    }
+    if ( nextPlantIdx > -1) 
+    {   
+      Serial.print(F("PlantID = ")); Serial.println(nextPlantIdx);
+  
+      // when positive value will be index of plant.
+      if (game->updatePlant(nextPlantIdx)) {
+        // when a different plant, update settings
+        Serial.println(F("Plant Updated"));
+  
+      } else {
+        // when same plant, do nothing
+        Serial.println(F("No Change in Plant"));
+      }
     }
   }
 
