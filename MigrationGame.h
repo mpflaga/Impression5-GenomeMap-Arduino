@@ -106,7 +106,7 @@ class MigrationGame {
     bool checkIfMatchCurrentDesiredRegions(int nextRegionIdx);
     bool checkIfAtEndOfRegions();
     void checkGameStateMachine();
-    void redrawWholeMigration();
+    void redrawMigration(int currentHop = SIZE_OF_HOPS, unsigned long segmentColor = LEDdisplay::Color( 255, 255, 255), unsigned long buttonColor = LEDdisplay::Color( 0, 255, 0));
 };
 
 #endif  // MigrationGame_h

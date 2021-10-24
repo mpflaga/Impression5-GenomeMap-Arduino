@@ -69,15 +69,15 @@ LedSegments LEDdisplay::findRegionsLedRange(Countries region) {
   return response;
 }
 
-void LEDdisplay::testAllLEDs() {
+void LEDdisplay::testAllLEDs(int wait) {
   // Testing all Neopixels
   int lastLED = (int) pgm_read_word(&ledSegs[SIZE_OF_LEDSEGS - 1].endPos);
   colorFillAll(Color( 255, 0, 0));
-  delay(250);
+  delay(wait);
   colorFillAll(Color( 0, 255, 0));
-  delay(250);
+  delay(wait);
   colorFillAll(Color( 0, 0, 255));
-  delay(250);
+  delay(wait);
   colorFillAll(Color( 0, 0,   0));
 }
 

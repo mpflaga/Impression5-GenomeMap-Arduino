@@ -5,13 +5,11 @@
   \author  Michael Flaga, michael@.flaga.net
 */
 
-#include <Adafruit_NeoPixel.h>
-#define LED_PIN    11
-
 #include "MigrationData.h"
 
 #include "LEDdisplay.h"
 LEDdisplay* led;
+#define NEOPIXEL_PIN    11
 
 #include "MigrationGame.h"
 MigrationGame* game;
@@ -50,7 +48,7 @@ void setup()
 
   Serial.print(F("Instanced ")); Serial.print(lastLED); Serial.println(F(" LED NeoPixel strip."));
 
-  led = new LEDdisplay(lastLED, LED_PIN, NEO_GRB + NEO_KHZ800);
+  led = new LEDdisplay(lastLED, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
   led->begin();
 
   led->testAllLEDs();

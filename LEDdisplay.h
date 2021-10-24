@@ -42,7 +42,7 @@ class LEDdisplay : public Adafruit_NeoPixel {
     void colorFillRange(unsigned long color, int beginPos, int endPos);
     void colorFillAll(unsigned long color);
     LedSegments findRegionsLedRange(Countries region);
-    void testAllLEDs();
+    void testAllLEDs(int wait = 250);
     void toggleAllLedsWhite();
     void colorWipe(uint32_t color, int wait);
     void theaterChase(uint32_t color, int wait);

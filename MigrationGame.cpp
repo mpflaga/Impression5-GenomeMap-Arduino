@@ -449,40 +449,17 @@ void MigrationGame::checkGameStateMachine() {
       segment = _led->findRegionsLedRange(region[0]);
       _serial->printf("segment.startPos = %d, segment.endPos = %d, segment.buttonID = %d\n", segment.startPos, segment.endPos, segment.buttonID);
       _led->colorFillRange(_led->Color(255, 0, 0), segment.startPos, segment.endPos);
+      updateGameState(PLANT_ACCEPTED_WAITING_FOR_BUTTON);
 
-      ledNextMillis = uint32_t(currentLoopMillis + 2000);
-      ledStartMillis = ledNextMillis;
-
-      _serial->print("currentLoopMillis = "); _serial->print(currentLoopMillis);
-      _serial->print(" ledNextMillis = "); _serial->print(ledNextMillis);
-      _serial->print(" currentBrightness = "); _serial->println(currentBrightness);
-      updateGameState(INCORRECT_REGION_WAIT_TO_TURN_OFF);
-
-      break;
-
-    case INCORRECT_REGION_WAIT_TO_TURN_OFF:
-
-      if (currentLoopMillis > ledNextMillis) {
-#if 1 // extra debug typically not needed.
-        _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
-
-        _serial->print("currentLoopMillis = "); _serial->print(currentLoopMillis);
-        _serial->print(" ledNextMillis = "); _serial->print(ledNextMillis);
-        _serial->print(" currentBrightness = "); _serial->println(currentBrightness);
-#endif
-
-        segment = _led->findRegionsLedRange(region[0]);
-        _serial->printf("segment.startPos = %d, segment.endPos = %d, segment.buttonID = %d\n", segment.startPos, segment.endPos, segment.buttonID);
-        _led->colorFillRange(_led->Color( 0, 0, 0), segment.startPos, segment.endPos);
-
-        updateGameState(PLANT_ACCEPTED_WAITING_FOR_BUTTON);
-      }
       break;
 
     case CORRECT_REGION_SELECTED:
       _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
       currentBrightness = maxBrightness;
       _led->setBrightness(currentBrightness);
+
+      // redraw prior migration, without incorrect selections. 
+      redrawMigration(hopPos, _led->Color( 255, 255, 0));
 
       // illuminate all buttons associated with HopPos.
       for (int nButtonPos = 0; nButtonPos < SIZE_OF_NEXTBUTTONS; nButtonPos++) {
@@ -639,6 +616,7 @@ void MigrationGame::checkGameStateMachine() {
 
     case FINISHED_LINE_TO_REGION:
       _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
+      
       hopPos++;
       _serial->printf("  hopPos  = %d\n", hopPos);
       isThereAnextHop = !checkIfAtEndOfRegions();
@@ -662,7 +640,7 @@ void MigrationGame::checkGameStateMachine() {
     case END_WIN: // MPF - WIP for testing.
       _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
 
-      redrawWholeMigration();
+      redrawMigration();
 
       updateGameState(FOO2);
       break;
@@ -680,7 +658,7 @@ void MigrationGame::checkGameStateMachine() {
 
 }
 
-void MigrationGame::redrawWholeMigration() {
+void MigrationGame::redrawMigration(int currentHop, unsigned long segmentColor, unsigned long buttonColor) {
   LedSegments segment;
 
     Serial.print(F("Running - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
@@ -688,12 +666,22 @@ void MigrationGame::redrawWholeMigration() {
   segment.startPos = (int) pgm_read_word(&ledSegs[(int) pgm_read_word(&plants[plant[0]].beginRingID)].startPos);
   segment.endPos =   (int) pgm_read_word(&ledSegs[(int) pgm_read_word(&plants[plant[0]].beginRingID)].endPos);
   _serial->printf("segment.startPos = %d, segment.endPos = %d, segment.buttonID = %d\n", segment.startPos, segment.endPos, segment.buttonID);
-  _led->colorFillRange(_led->Color( 255, 255, 255), segment.startPos, segment.endPos);
 
+  // blank all pixels before redrawing fresh
+  for (int pos = ((0 + 1) - 1); pos < (_led->numPixels() + 1); pos++) {
+    _led->setPixelColor(pos, _led->Color( 0, 0, 0)); // 0's for off
+  }  
 
-  for (int hop = 0; hop < SIZE_OF_HOPS; hop++) {
+  // draw first ring.
+  for (int pos = (segment.startPos - 1); pos < segment.endPos; pos++) { 
+    _led->setPixelColor(pos, buttonColor);
+  }
+
+  for (int hop = 0; hop < currentHop; hop++) {
     if ((int) pgm_read_word(plants[plant[0]].hops[hop].textMSG) != 0) {
       _serial->printf("    hops[%d].\n", hop);
+      
+      // loop thru all the buttons
       for (int nButtonPos = 0; nButtonPos < SIZE_OF_NEXTBUTTONS; nButtonPos++) {
         int nextLedSeg = (int) pgm_read_word(&plants[plant[0]].hops[hop].nextButtons[nButtonPos]);
         if (nextLedSeg > 0) {
@@ -702,11 +690,13 @@ void MigrationGame::redrawWholeMigration() {
                    ledpos <= (int) pgm_read_word(&ledSegs[nextLedSeg].endPos);
                    ledpos++) {
             _serial->printf("%d, ", ledpos);
-            _led->setPixelColor(ledpos - 1, _led->Color(  255, 255, 255));
+            _led->setPixelColor(ledpos - 1, buttonColor);
           }
           _serial->printf("\n");
         }
       }
+      
+      // loop thru all the segments between buttons.
       for (int nStepPos = 0; nStepPos < SIZE_OF_STEPS; nStepPos++) {
         int ledSegPos = (int) pgm_read_word(&plants[plant[0]].hops[hop].steps[nStepPos]);
         if (ledSegPos != 0) {
@@ -725,7 +715,7 @@ void MigrationGame::redrawWholeMigration() {
             endPos = (int) pgm_read_word(&ledSegs[ledSegPos].startPos);
             for (int ledpos = startPos; ledpos >= endPos; ledpos--) {
               _serial->printf("%d, ", ledpos);
-              _led->setPixelColor(ledpos - 1, _led->Color(  255, 255, 255));
+              _led->setPixelColor(ledpos - 1, segmentColor);
 
             }
           } else {
@@ -733,7 +723,7 @@ void MigrationGame::redrawWholeMigration() {
             endPos = (int) pgm_read_word(&ledSegs[ledSegPos].endPos);
             for (int ledpos = startPos; ledpos <= endPos; ledpos++) {
               _serial->printf("%d, ", ledpos);
-              _led->setPixelColor(ledpos - 1, _led->Color(  255, 255, 255));
+              _led->setPixelColor(ledpos - 1, segmentColor);
             }
           }
           _serial->printf("\n");
