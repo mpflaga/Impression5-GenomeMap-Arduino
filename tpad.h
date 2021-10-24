@@ -54,13 +54,7 @@ const mprs groups[] PROGMEM = {
     {0, 0, 0, 0, CALIFORNIA, ARIZONA_NEW_MEXICO, E_NORTH_AMERICA, 0, MEXICO, 0, SOUTH_CAROLINA, 0}, //identifier
   }
 };
-
-typedef struct {
-  uint8_t address;
-  unsigned char tthresh[numElectrodes];
-  unsigned char rthresh[numElectrodes];
-  uint8_t identifier[numElectrodes];
-} mprs1;
+#define SIZE_OF_CHIPS LENGTH_OF_ARRAY(groups)
 
 class tpad : public MPR121_type {
 
@@ -72,7 +66,7 @@ class tpad : public MPR121_type {
     int interruptPin;
 
   private:
-    MPR121_type chips[4];
+    MPR121_type chips[SIZE_OF_CHIPS];
 
 };
 

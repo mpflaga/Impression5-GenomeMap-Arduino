@@ -13,7 +13,7 @@ tpad::~tpad() {
 void tpad::begin(int IRQpin) {
 
   interruptPin = IRQpin;
-  for (int offset = 0; offset < 4; offset++) {
+  for (int offset = 0; offset < SIZE_OF_CHIPS; offset++) {
     if (!chips[offset].begin(offset + 0x5A)) {
       Serial.println("error setting up MPR121");
       switch (chips[offset].getError()) {
@@ -60,13 +60,17 @@ void tpad::begin(int IRQpin) {
 
 int tpad::scan() {
   int identifier = 0;
+  int touchedButtons = 0;
 
-  for (int addr = 0; addr < 4; addr++) {
+  for (int addr = 0; addr < SIZE_OF_CHIPS; addr++) {
     chips[addr].updateAll();
+    touchedButtons += chips[addr].getNumTouches();
+  }
 
+  for (int addr = 0; addr < SIZE_OF_CHIPS; addr++) {
     for (int pin = 0; pin < numElectrodes; pin++) {
 
-      if (chips[addr].isNewTouch(pin)) {
+      if ((chips[addr].isNewTouch(pin)) && (touchedButtons < 2)) {
         identifier = (int8_t) pgm_read_word(&groups[addr].identifier[pin]);
       } else if (chips[addr].isNewRelease(pin)) {
         identifier = -(int8_t) pgm_read_word(&groups[addr].identifier[pin]);
