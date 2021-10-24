@@ -25,7 +25,7 @@ tpad tpad;
 Pins ldrPins[] = {
   // {Signal Pin, GND Pin, Threshold}
   // Note - GND = 0 assumes LDR is connected to real ground.
-  {A0, A1, 700}, 
+  {A0, A1, 700},
   {A2, A3, 700},
   {A4, A5, 700}
 };
@@ -83,9 +83,9 @@ void setup()
 
   Serial.print("initial value = "); Serial.println(PhotoCellNumber.value);
   value_prv = PhotoCellNumber.value;
-  #define PRINT_TIME_STAMPS 0 // 1 = ON, 0 = OFF
-  #define PRINT_VALUES 0
-  PhotoCellNumber.setDebugMask( PRINT_TIME_STAMPS<<1 | PRINT_VALUES<<0 );
+#define PRINT_TIME_STAMPS 0 // 1 = ON, 0 = OFF
+#define PRINT_VALUES 0
+  PhotoCellNumber.setDebugMask( PRINT_TIME_STAMPS << 1 | PRINT_VALUES << 0 );
 
   // print build stat's.
   Serial.print(F("Build Date: ")); Serial.print(F(__DATE__)); Serial.print(F(" ")); Serial.println(F(__TIME__));
@@ -115,15 +115,15 @@ void loop()
         nextPlantIdx = idx;
       }
     }
-    if ( nextPlantIdx > -1) 
-    {   
+    if ( nextPlantIdx > -1)
+    {
       Serial.print(F("PlantID = ")); Serial.println(nextPlantIdx);
-  
+
       // when positive value will be index of plant.
       if (game->updatePlant(nextPlantIdx)) {
         // when a different plant, update settings
         Serial.println(F("Plant Updated"));
-  
+
       } else {
         // when same plant, do nothing
         Serial.println(F("No Change in Plant"));

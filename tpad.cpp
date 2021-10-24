@@ -11,7 +11,7 @@ tpad::~tpad() {
 }
 
 void tpad::begin(int IRQpin) {
-  
+
   interruptPin = IRQpin;
   for (int offset = 0; offset < 4; offset++) {
     if (!chips[offset].begin(offset + 0x5A)) {
@@ -60,7 +60,7 @@ void tpad::begin(int IRQpin) {
 
 int tpad::scan() {
   int identifier = 0;
-  
+
   for (int addr = 0; addr < 4; addr++) {
     chips[addr].updateAll();
 
@@ -95,5 +95,3 @@ int tpad::scan() {
   }
   return identifier;
 }
-
-

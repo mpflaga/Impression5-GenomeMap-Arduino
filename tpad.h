@@ -20,7 +20,7 @@
 
 #define numElectrodes 12 // per MPR chip
 typedef struct {
-//  MPR121_type device;
+  //  MPR121_type device;
   uint8_t address;
   unsigned char tthresh[numElectrodes];
   unsigned char rthresh[numElectrodes];

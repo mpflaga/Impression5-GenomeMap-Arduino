@@ -158,18 +158,18 @@ void PhotoCellNumber::update() {
   if ( active && ((unsigned long) (time_ - timerA2D) >= periodA2D) ) {
     // time to update running averages with new samples
     timerA2D = timerA2D + periodA2D;
-      if(debugMask & 0b10) {
-        Serial.print(" ");Serial.println(time_);
-      }
+    if (debugMask & 0b10) {
+      Serial.print(" "); Serial.println(time_);
+    }
 
     for (int i = 0; i < nChannels; i++)
     {
       ldr[i]->updateSample(); // update each sample of the running average.
-      if(debugMask & 0b01) {
+      if (debugMask & 0b01) {
         Serial.print(" "); Serial.print(ldr[i]->getAvg());
       }
     }
-    if(debugMask & 0b01) {
+    if (debugMask & 0b01) {
       Serial.println();
     }
   }
