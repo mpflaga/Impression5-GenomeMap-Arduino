@@ -49,12 +49,29 @@ void tpad::begin(int IRQpin) {
     Serial.print((byte) pgm_read_word(&groups[offset].address), HEX);
     Serial.println();
 
+    for (unsigned char channel = 0; channel < numElectrodes; channel++) {
+
+    Serial.print("Channel "); Serial.print(channel); Serial.print(" tthresh = "); Serial.print((unsigned char) pgm_read_word(&groups[offset].tthresh));
+      Serial.print(" rthreshold = "); Serial.println((unsigned char) pgm_read_word(&groups[offset].rthresh));
+
+      // this is the touch threshold - setting it low makes it more like a proximity trigger
+      // default value is 40 for touch
+      chips[offset].setTouchThreshold(channel, (unsigned char) pgm_read_word(&groups[offset].tthresh));
+
+      // this is the release threshold - must ALWAYS be smaller than the touch threshold
+      // default value is 20 for touch
+      chips[offset].setReleaseThreshold(channel, (unsigned char) pgm_read_word(&groups[offset].rthresh));
+    }
+
     chips[offset].setFFI(FFI_10);
     chips[offset].setSFI(SFI_10);
-    chips[offset].setGlobalCDT(CDT_4US);  // reasonable for larger capacitances
-    delay(1000);
+    chips[offset].setGlobalCDT(CDT_500NS);  // reasonable for larger capacitances
+    delay(500);
     chips[offset].autoSetElectrodes();  // autoset all electrode settings
+    delay(500);
 
+    // initial data update
+    chips[offset].updateTouchData();
   }
 }
 
