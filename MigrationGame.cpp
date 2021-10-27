@@ -350,7 +350,7 @@ void MigrationGame::checkGameStateMachine() {
   switch (gameState[0]) {
     case NO_PLANT_SELECTED:
       _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
-      _led->colorFillAll(_led->Color( 0, 0, 0));
+      _led->colorFillAll(_led->Color( OFF ));
       updateGameState(NO_PLANT_PRIMED);
       break;
 
@@ -364,7 +364,7 @@ void MigrationGame::checkGameStateMachine() {
       _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
       currentBrightness = maxBrightness;
       _led->setBrightness(currentBrightness);
-      _led->colorFillAll(_led->Color(  255, 255,   0)); // RED + GREEN = YELLOW
+      _led->colorFillAll(_led->Color( YELLOW ));
       ledDelayMillis = 100 / 4; // MPF - WIP keep low to speed up development.
       ledNextMillis = uint32_t(currentLoopMillis + ledDelayMillis);
       ledStartMillis = ledNextMillis;
@@ -419,7 +419,7 @@ void MigrationGame::checkGameStateMachine() {
       segment.startPos = (int) pgm_read_word(&ledSegs[(int) pgm_read_word(&plants[plant[0]].beginRingID)].startPos);
       segment.endPos =   (int) pgm_read_word(&ledSegs[(int) pgm_read_word(&plants[plant[0]].beginRingID)].endPos);
       _serial->printf("segment.startPos = %d, segment.endPos = %d, segment.buttonID = %d\n", segment.startPos, segment.endPos, segment.buttonID);
-      _led->colorFillRange(_led->Color( 0, 255, 0), segment.startPos, segment.endPos);
+      _led->colorFillRange(_led->Color( GREEN ), segment.startPos, segment.endPos);
 
       updateGameState(PLANT_ACCEPTED_WAITING_FOR_BUTTON);
       break;
@@ -448,7 +448,7 @@ void MigrationGame::checkGameStateMachine() {
 
       segment = _led->findRegionsLedRange(region[0]);
       _serial->printf("segment.startPos = %d, segment.endPos = %d, segment.buttonID = %d\n", segment.startPos, segment.endPos, segment.buttonID);
-      _led->colorFillRange(_led->Color(255, 0, 0), segment.startPos, segment.endPos);
+      _led->colorFillRange(_led->Color( RED ), segment.startPos, segment.endPos);
       updateGameState(PLANT_ACCEPTED_WAITING_FOR_BUTTON);
 
       break;
@@ -459,14 +459,14 @@ void MigrationGame::checkGameStateMachine() {
       _led->setBrightness(currentBrightness);
 
       // redraw prior migration, without incorrect selections.
-      redrawMigration(hopPos, _led->Color( 255, 255, 0));
+      redrawMigration(hopPos, _led->Color( YELLOW ));
 
       // illuminate all buttons associated with HopPos.
       for (int nButtonPos = 0; nButtonPos < SIZE_OF_NEXTBUTTONS; nButtonPos++) {
         int nextLedSeg = (int) pgm_read_word(&plants[plant[0]].hops[hopPos].nextButtons[nButtonPos]);
         if (nextLedSeg > 0) {
           _serial->printf("        nextButtons[%d]  = '%d' : ", nButtonPos, nextLedSeg);
-          _led->colorFillRange(_led->Color( 0, 255, 0),
+          _led->colorFillRange(_led->Color( GREEN ),
                                (int) pgm_read_word(&ledSegs[nextLedSeg].startPos),
                                (int) pgm_read_word(&ledSegs[nextLedSeg].endPos)
                               );
@@ -579,7 +579,7 @@ void MigrationGame::checkGameStateMachine() {
 
         // _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
         _serial->printf("%d, ", ledpos);
-        _led->setPixelColor(ledpos, _led->Color(  255, 255,   0));
+        _led->setPixelColor(ledpos, _led->Color( YELLOW ));
         _led->show();
 
         // _serial->printf("\n  ledSegPos = %d(%s), startPos = %d, endPos = %d, ledpos = %d\n", ledSegPos, (reverse ? "R" : "A"), startPos, endPos, ledpos);
@@ -640,12 +640,11 @@ void MigrationGame::checkGameStateMachine() {
     case END_WIN: // MPF - WIP for testing.
       _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
 
-      redrawMigration();
-
-      updateGameState(FOO2);
+        redrawMigration();
+        updateGameState(WIN_IDLE);
       break;
 
-    case FOO2: // MPF - WIP for testing.
+    case WIN_IDLE: // MPF - WIP for testing.
       /*      _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
            delay(1000); */
       break;
@@ -669,7 +668,7 @@ void MigrationGame::redrawMigration(int currentHop, unsigned long segmentColor, 
 
   // blank all pixels before redrawing fresh
   for (int pos = ((0 + 1) - 1); pos < (_led->numPixels() + 1); pos++) {
-    _led->setPixelColor(pos, _led->Color( 0, 0, 0)); // 0's for off
+    _led->setPixelColor(pos, _led->Color( OFF )); // 0's for off
   }
 
   // draw first ring.

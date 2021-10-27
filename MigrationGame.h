@@ -33,7 +33,7 @@ typedef enum  {
   FINISHED_SEGMENT,
   BEGIN_WIN,
   END_WIN,
-  FOO2,
+  WIN_IDLE,
   FINISHED_LINE_TO_REGION
 } state_m; //enum state_m
 
@@ -56,7 +56,7 @@ static const char stateStr[][42] PROGMEM = {
   "FINISHED_SEGMENT",
   "BEGIN_WIN",
   "END_WIN",
-  "FOO2",
+  "WIN_IDLE",
   "FINISHED_LINE_TO_REGION"
 };
 
@@ -106,7 +106,7 @@ class MigrationGame {
     bool checkIfMatchCurrentDesiredRegions(int nextRegionIdx);
     bool checkIfAtEndOfRegions();
     void checkGameStateMachine();
-    void redrawMigration(int currentHop = SIZE_OF_HOPS, unsigned long segmentColor = LEDdisplay::Color( 255, 255, 255), unsigned long buttonColor = LEDdisplay::Color( 0, 255, 0));
+    void redrawMigration(int currentHop = SIZE_OF_HOPS, unsigned long segmentColor = LEDdisplay::Color( WHITE ), unsigned long buttonColor = LEDdisplay::Color( GREEN ));
 };
 
 #endif  // MigrationGame_h

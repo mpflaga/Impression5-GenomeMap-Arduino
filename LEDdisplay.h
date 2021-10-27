@@ -25,6 +25,19 @@
 #include <Adafruit_NeoPixel.h>
 #include "MigrationData.h"
 
+#define RED     255,   0,   0
+#define ORANGE  255,  34,   0
+#define YELLOW  255, 255,   0
+#define GREEN     0, 255,   0
+#define CYAN      0, 255, 255
+#define BLUE      0,   0, 255
+#define VIOLET  153,   0, 255
+#define MAGENTA 255,   0,  51
+#define PINK    255,  51, 119
+#define AQUA     85, 125, 255
+#define WHITE   255, 255, 255
+#define OFF       0,   0,   0
+
 /**
    \class LEDdisplay
    \brief Interface Driver to the f NeoPixels in 7 segment arrangement.

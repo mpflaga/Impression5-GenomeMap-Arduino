@@ -72,13 +72,13 @@ LedSegments LEDdisplay::findRegionsLedRange(Countries region) {
 void LEDdisplay::testAllLEDs(int wait) {
   // Testing all Neopixels
   int lastLED = (int) pgm_read_word(&ledSegs[SIZE_OF_LEDSEGS - 1].endPos);
-  colorFillAll(Color( 255, 0, 0));
+  colorFillAll(Color( RED ));
   delay(wait);
-  colorFillAll(Color( 0, 255, 0));
+  colorFillAll(Color( GREEN ));
   delay(wait);
-  colorFillAll(Color( 0, 0, 255));
+  colorFillAll(Color( BLUE ));
   delay(wait);
-  colorFillAll(Color( 0, 0,   0));
+  colorFillAll(Color( OFF ));
 }
 
 #define DIM_FACTOR 4
@@ -86,7 +86,7 @@ void LEDdisplay::toggleAllLedsWhite() {
   // Testing all Neopixels
   int lastLED = (int) pgm_read_word(&ledSegs[SIZE_OF_LEDSEGS - 1].endPos);
   if (getPixelColor(lastLED - 1) > 0 ) {
-    colorFillRange(Color( 0, 0, 0), 1, lastLED);
+    colorFillRange(Color( OFF ), 1, lastLED);
   } else {
     colorFillRange(Color( 255 / DIM_FACTOR, 255 / DIM_FACTOR, 255 / DIM_FACTOR), 1, lastLED);
   }
@@ -177,15 +177,15 @@ void LEDdisplay::theaterChaseRainbow(int wait) {
 
 void LEDdisplay::showCaseMode() {
   while (1) {
-    colorWipe(Color(255,   0,   0), 0); // Red
+    colorWipe(Color( RED ), 0); // Red
     if (Serial.available()) {
       break;
     }
-    colorWipe(Color(  0, 255,   0), 0); // Green
+    colorWipe(Color( GREEN ), 0); // Green
     if (Serial.available()) {
       break;
     }
-    colorWipe(Color(  0,   0, 255), 0); // Blue
+    colorWipe(Color( BLUE ), 0); // Blue
     if (Serial.available()) {
       break;
     }
@@ -195,15 +195,15 @@ void LEDdisplay::showCaseMode() {
     //        }
 
     // Do a theater marquee effect in various colors...
-    theaterChase(Color(127, 127, 127), 0); // White, half brightness
+    theaterChase(Color( WHITE ), 0); // White, half brightness
     if (Serial.available()) {
       break;
     }
-    theaterChase(Color(127,   0,   0), 0); // Red, half brightness
+    theaterChase(Color( RED ), 0); // Red, half brightness
     if (Serial.available()) {
       break;
     }
-    theaterChase(Color(  0,   0, 127), 0); // Blue, half brightness
+    theaterChase(Color( BLUE ), 0); // Blue, half brightness
     if (Serial.available()) {
       break;
     }
