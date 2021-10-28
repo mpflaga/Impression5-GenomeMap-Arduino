@@ -364,7 +364,7 @@ void MigrationGame::checkGameStateMachine() {
       _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
       currentBrightness = maxBrightness;
       _led->setBrightness(currentBrightness);
-      _led->colorFillAll(_led->Color( YELLOW ));
+      _led->colorFillAll(_led->Color( WHITE ));
       ledDelayMillis = 100 / 4; // MPF - WIP keep low to speed up development.
       ledNextMillis = uint32_t(currentLoopMillis + ledDelayMillis);
       ledStartMillis = ledNextMillis;
@@ -459,7 +459,7 @@ void MigrationGame::checkGameStateMachine() {
       _led->setBrightness(currentBrightness);
 
       // redraw prior migration, without incorrect selections.
-      redrawMigration(hopPos, _led->Color( YELLOW ));
+      redrawMigration(hopPos, _led->Color( WHITE ));
 
       // illuminate all buttons associated with HopPos.
       for (int nButtonPos = 0; nButtonPos < SIZE_OF_NEXTBUTTONS; nButtonPos++) {
@@ -579,7 +579,7 @@ void MigrationGame::checkGameStateMachine() {
 
         // _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
         _serial->printf("%d, ", ledpos);
-        _led->setPixelColor(ledpos, _led->Color( YELLOW ));
+        _led->setPixelColor(ledpos, _led->Color( WHITE ));
         _led->show();
 
         // _serial->printf("\n  ledSegPos = %d(%s), startPos = %d, endPos = %d, ledpos = %d\n", ledSegPos, (reverse ? "R" : "A"), startPos, endPos, ledpos);
