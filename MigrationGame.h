@@ -8,6 +8,8 @@
 #include <PrintEx.h>
 #endif
 
+#include "MemoryFree.h";
+
 #ifndef MigrationGame_h
 #define MigrationGame_h
 

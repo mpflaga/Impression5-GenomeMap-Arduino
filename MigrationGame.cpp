@@ -146,6 +146,7 @@ void MigrationGame::printPlantsWithLED() {
             _serial->printf("        nextButtons[%d]  = '%d' : ", nButtonPos, nextLedSeg);
             
             
+            Serial.print(F("(FR=")); Serial.print(freeMemory()); Serial.print(F(") "));
             
             for (int ledpos = (int) pgm_read_word(&ledSegs[nextLedSeg].startPos);
                  ledpos <= (int) pgm_read_word(&ledSegs[nextLedSeg].endPos);
@@ -165,6 +166,7 @@ void MigrationGame::printPlantsWithLED() {
               ledSegPos -= SIZE_OF_LEDSEGS;
             }
             _serial->printf("        steps[%d]  = '%d'(%s) : ", nStepPos, ledSegPos, reverse ? "R" : "A");
+            Serial.print(F("(FR=")); Serial.print(freeMemory()); Serial.print(F(") "));
             int endPos = 0;
             int startPos = 0;
 
@@ -468,6 +470,7 @@ void MigrationGame::checkGameStateMachine() {
         int nextLedSeg = (int) pgm_read_word(&plants[plant[0]].hops[hopPos].nextButtons[nButtonPos]);
         if (nextLedSeg > 0) {
           _serial->printf("        nextButtons[%d]  = '%d' : ", nButtonPos, nextLedSeg);
+          Serial.print(F("(FR=")); Serial.print(freeMemory()); Serial.print(F(") "));
 
           _led->colorFillRange(_led->Color( GREEN ),
                                (int) pgm_read_word(&ledSegs[nextLedSeg].startPos),
@@ -515,6 +518,7 @@ void MigrationGame::checkGameStateMachine() {
             reverse = false;
           }
           _serial->printf("        steps[%d]  = '%d'(%s) : \n", stepPos, ledSegPos, reverse ? "R" : "A");
+          Serial.print(F("(FR=")); Serial.print(freeMemory()); Serial.print(F(") "));
 
           updateGameState(START_DRAWING_SEGMENT);
 
@@ -584,6 +588,7 @@ void MigrationGame::checkGameStateMachine() {
         _serial->printf("%d, ", ledpos);
         _led->setPixelColor(ledpos, _led->Color( WHITE ));
         _led->show();
+        Serial.print(F("(FR=")); Serial.print(freeMemory()); Serial.print(F(") "));
         
         // _serial->printf("\n  ledSegPos = %d(%s), startPos = %d, endPos = %d, ledpos = %d\n", ledSegPos, (reverse ? "R" : "A"), startPos, endPos, ledpos);
 
@@ -688,6 +693,7 @@ void MigrationGame::redrawMigration(int currentHop, unsigned long segmentColor, 
         int nextLedSeg = (int) pgm_read_word(&plants[plant[0]].hops[hop].nextButtons[nButtonPos]);
         if (nextLedSeg > 0) {
           _serial->printf("        nextButtons[%d]  = '%d' : ", nButtonPos, nextLedSeg);
+          Serial.print(F("(FR=")); Serial.print(freeMemory()); Serial.print(F(") "));
           
           for (int ledpos = (int) pgm_read_word(&ledSegs[nextLedSeg].startPos);
                ledpos <= (int) pgm_read_word(&ledSegs[nextLedSeg].endPos);
@@ -710,6 +716,7 @@ void MigrationGame::redrawMigration(int currentHop, unsigned long segmentColor, 
             ledSegPos -= SIZE_OF_LEDSEGS;
           }
           _serial->printf("        steps[%d]  = '%d'(%s) : ", nStepPos, ledSegPos, reverse ? "R" : "A");
+          Serial.print(F("(FR=")); Serial.print(freeMemory()); Serial.print(F(") "));
           int endPos = 0;
           int startPos = 0;
 

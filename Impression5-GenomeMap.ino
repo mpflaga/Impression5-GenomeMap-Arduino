@@ -48,12 +48,17 @@ void setup()
 
   Serial.print(F("Instanced ")); Serial.print(lastLED); Serial.println(F(" LED NeoPixel strip."));
 
+Serial.print(F("before LEDs (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
   led = new LEDdisplay(lastLED, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
+Serial.print(F("after LEDs new (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
   led->begin();
+Serial.print(F("after LEDs begin (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
 
   led->testAllLEDs();
+Serial.print(F("after LEDs test (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
 
   game = new MigrationGame();
+Serial.print(F("after MigrationGame new (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
   game->begin(led, Serial);
 
 #if 0  // print out all data structures (if debug is enabled).
@@ -184,6 +189,7 @@ String getConsole() {
       Serial.print(F("  stepPos = ")); Serial.println(game->stepPos);
       serial.printf("  game->prv_gameState= '%p'(%d)\n", stateStr[game->prv_gameState], game->prv_gameState);
       game->printGameStateHistory();
+      Serial.println(F("Free RAM = ")); Serial.println(freeMemory());
 
     } else if (consoleInputStr == "G") {
       // list out history of gameState[]
@@ -193,9 +199,11 @@ String getConsole() {
         serial.printf("  gameState[%d]  = '%p'(%d)\n", idx, stateStr[game->gameState[idx]], game->gameState[idx]);
       }
       serial.printf("  plant[%d] = %p(%d)\n", 0, plants[game->plant[0]].plantName, game->plant[0]);
+      Serial.println(F("Free RAM = ")); Serial.println(freeMemory());
       
     } else if (consoleInputStr == "R") {
       game->printCurrentDesiredRegion();
+      Serial.println(F("Free RAM = ")); Serial.println(freeMemory());
 
     } else if (consoleInputStr == "?") {
       // print help describing commands.
@@ -211,6 +219,7 @@ String getConsole() {
       Serial.println(F("  0..7 - select corresponding plant"));
       Serial.println(F("  A..Z - select matching region"));
       Serial.println();
+      Serial.println(F("Free RAM = ")); Serial.println(freeMemory());
 
     } else if ( isDigit(consoleInputStr.charAt(0)) ) {
       // cross reference 0..9 to find matching plant
