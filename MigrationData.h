@@ -181,7 +181,6 @@ static const LedSegments ledSegs[] PROGMEM = {
   {1358, 1373,  None              }, // 89
   {1374, 1389,  AFRICA            }, // 90
   { 141,  141,  None              }, // 91
-  {1318, 1318,  None              }, // 92
   {1389, 1389,  None              }, // 93 // Need last value to be max LED for autodetect Length of LEDs.
 
 };
@@ -419,7 +418,7 @@ static const plantStruct plants[] PROGMEM = {
           82, 7, 77
         },
         {                    // steps
-          28 + DESCEND, 25, 10 + DESCEND, 3, 4, 88 + DESCEND, 87 + DESCEND, 92, 5, 6, 9 + DESCEND, 78 + DESCEND
+          28 + DESCEND, 25, 10 + DESCEND, 3, 4, 88 + DESCEND, 87 + DESCEND, 5, 6, 9 + DESCEND, 78 + DESCEND
         }
       }
     }                        // end Hops
