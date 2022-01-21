@@ -42,7 +42,7 @@ void setup()
   //while(!Serial);  // only needed if you want serial feedback with the
   // Arduino Leonardo or Bare Touch Board
   Serial.println();
-  Serial.print(F("Running - ")); Serial.print(__func__); Serial.println("()");
+  Serial.print(F("Running - ")); Serial.print(__func__); Serial.println(F("()"));
 
   int lastLED = (int) pgm_read_word(&ledSegs[SIZE_OF_LEDSEGS - 1].endPos);
 
@@ -75,13 +75,13 @@ void setup()
 
   for (int i = 0; i < sizeof(ldrPins) / sizeof(ldrPins[0]); i++)
   {
-    Serial.print("PhotoCellNumber.ldr["); Serial.print(i); Serial.print("] = ");
+    Serial.print(F("PhotoCellNumber.ldr[")); Serial.print(i); Serial.print(F("] = "));
     PhotoCellNumber.ldr[i]->PrintPins();
   }
   Serial.println();
   PhotoCellNumber.printArray();
 
-  Serial.print("initial value = "); Serial.println(PhotoCellNumber.value);
+  Serial.print(F("initial value = ")); Serial.println(PhotoCellNumber.value);
   value_prv = PhotoCellNumber.value;
 #define PRINT_TIME_STAMPS 0 // 1 = ON, 0 = OFF
 #define PRINT_VALUES 0
@@ -93,7 +93,7 @@ void setup()
 
   Serial.println(F("Enter in State Change?"));
 
-  Serial.print(F("Ending  - ")); Serial.print(__func__); Serial.println("()");
+  Serial.print(F("Ending  - ")); Serial.print(__func__); Serial.println(F("()"));
 }
 
 void loop()
@@ -142,7 +142,7 @@ void loop()
 
 String getConsole() {
   String response;
-  //  Serial.print(F("Running - "));Serial.print(__func__);Serial.println("()");
+  //  Serial.print(F("Running - "));Serial.print(__func__);Serial.println(F("()"));
 
   if (Serial.available() > 0)
   {
@@ -151,7 +151,7 @@ String getConsole() {
     // clean up serial input
     consoleInputStr.trim();
     consoleInputStr.toUpperCase();
-    Serial.print(F("You have entered = '")); Serial.print(consoleInputStr); Serial.println("'");
+    Serial.print(F("You have entered = '")); Serial.print(consoleInputStr); Serial.println(F("'"));
 
     // parse out commands
     if (consoleInputStr == "") {
@@ -187,13 +187,13 @@ String getConsole() {
 
     } else if (consoleInputStr == "G") {
       // list out history of gameState[]
-      Serial.println("History of gameState[] :");
+      Serial.println(F("History of gameState[] :"));
       serial.printf("  game->prv_gameState = '%p'(%d)\n", stateStr[game->prv_gameState], game->prv_gameState);
       for (int idx = 0; idx < LENGTH_OF_ARRAY(game->gameState); idx++) {
         serial.printf("  gameState[%d]  = '%p'(%d)\n", idx, stateStr[game->gameState[idx]], game->gameState[idx]);
       }
       serial.printf("  plant[%d] = %p(%d)\n", 0, plants[game->plant[0]].plantName, game->plant[0]);
-
+      
     } else if (consoleInputStr == "R") {
       game->printCurrentDesiredRegion();
 
@@ -239,6 +239,6 @@ String getConsole() {
     response = consoleInputStr;
   }
 
-  //  Serial.print(F("Ending  - "));Serial.print(__func__);Serial.println("()");
+  //  Serial.print(F("Ending  - "));Serial.print(__func__);Serial.println(F("()"));
   return response;
 }

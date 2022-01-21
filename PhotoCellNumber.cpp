@@ -73,9 +73,9 @@ void PhotoCell::updateSample() {
 
 void PhotoCell::PrintPins() {
   // nice print to verify things.
-  Serial.print("pins.sig = "); Serial.print(pins.sig); Serial.print(" ");
-  Serial.print("pins.gnd = "); Serial.print(pins.gnd); Serial.print(" ");
-  Serial.print("pins.thr = "); Serial.print(pins.thr); Serial.println();
+  Serial.print(F("pins.sig = ")); Serial.print(pins.sig); Serial.print(F(" "));
+  Serial.print(F("pins.gnd = ")); Serial.print(pins.gnd); Serial.print(F(" "));
+  Serial.print(F("pins.thr = ")); Serial.print(pins.thr); Serial.println();
 }
 
 bool PhotoCell::GetBit() {
@@ -159,14 +159,14 @@ void PhotoCellNumber::update() {
     // time to update running averages with new samples
     timerA2D = timerA2D + periodA2D;
     if (debugMask & 0b10) {
-      Serial.print(" "); Serial.println(time_);
+      Serial.print(F(" ")); Serial.println(time_);
     }
 
     for (int i = 0; i < nChannels; i++)
     {
       ldr[i]->updateSample(); // update each sample of the running average.
       if (debugMask & 0b01) {
-        Serial.print(" "); Serial.print(ldr[i]->getAvg());
+        Serial.print(F(" ")); Serial.print(ldr[i]->getAvg());
       }
     }
     if (debugMask & 0b01) {
@@ -177,7 +177,7 @@ void PhotoCellNumber::update() {
   if ( active && ((unsigned long) (time_ - timerAvg) >= periodUpdateAvg) ) {
     // time to update running reported averages.
     timerAvg = timerAvg + periodUpdateAvg;
-    //Serial.print("~");Serial.println(time_);
+    //Serial.print(F("~"));Serial.println(time_);
 
     // build up number from bits
     int value_ = 0;

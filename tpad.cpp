@@ -15,25 +15,25 @@ void tpad::begin(int IRQpin) {
   interruptPin = IRQpin;
   for (int offset = 0; offset < SIZE_OF_CHIPS; offset++) {
     if (!chips[offset].begin(offset + 0x5A)) {
-      Serial.println("error setting up MPR121");
+      Serial.println(F("error setting up MPR121"));
       switch (chips[offset].getError()) {
         case NO_ERROR:
-          Serial.println("no error");
+          Serial.println(F("no error"));
           break;
         case ADDRESS_UNKNOWN:
-          Serial.println("incorrect address");
+          Serial.println(F("incorrect address"));
           break;
         case READBACK_FAIL:
-          Serial.println("readback failure");
+          Serial.println(F("readback failure"));
           break;
         case OVERCURRENT_FLAG:
-          Serial.println("overcurrent on REXT pin");
+          Serial.println(F("overcurrent on REXT pin"));
           break;
         case OUT_OF_RANGE:
-          Serial.println("electrode out of range");
+          Serial.println(F("electrode out of range"));
           break;
         case NOT_INITED:
-          Serial.println("not initialised");
+          Serial.println(F("not initialised"));
           break;
         default:
           Serial.println("unknown error");
@@ -41,18 +41,18 @@ void tpad::begin(int IRQpin) {
       }
       while (1);
     } else {
-      Serial.print("MPR121 "); Serial.print(offset); Serial.println(" started");
+      Serial.print(F("MPR121 ")); Serial.print(offset); Serial.println(F(" started"));
     }
     chips[offset].setInterruptPin(interruptPin);
-    Serial.print("Initializing groups MPR #0x");
+    Serial.print(F("Initializing groups MPR #0x"));
 
     Serial.print((byte) pgm_read_word(&groups[offset].address), HEX);
     Serial.println();
 
     for (unsigned char channel = 0; channel < numElectrodes; channel++) {
 
-    Serial.print("Channel "); Serial.print(channel); Serial.print(" tthresh = "); Serial.print((unsigned char) pgm_read_word(&groups[offset].tthresh));
-      Serial.print(" rthreshold = "); Serial.println((unsigned char) pgm_read_word(&groups[offset].rthresh));
+    Serial.print(F("Channel ")); Serial.print(channel); Serial.print(F(" tthresh = ")); Serial.print((unsigned char) pgm_read_word(&groups[offset].tthresh));
+      Serial.print(F(" rthreshold = ")); Serial.println((unsigned char) pgm_read_word(&groups[offset].rthresh));
 
       // this is the touch threshold - setting it low makes it more like a proximity trigger
       // default value is 40 for touch
