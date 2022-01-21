@@ -51,16 +51,16 @@ void tpad::begin(int IRQpin) {
 
     for (unsigned char channel = 0; channel < numElectrodes; channel++) {
 
-    Serial.print(F("Channel ")); Serial.print(channel); Serial.print(F(" tthresh = ")); Serial.print((unsigned char) pgm_read_word(&groups[offset].tthresh));
-      Serial.print(F(" rthreshold = ")); Serial.println((unsigned char) pgm_read_word(&groups[offset].rthresh));
+    Serial.print(F("Channel ")); Serial.print(channel); Serial.print(F(" tthresh = ")); Serial.print((unsigned char) pgm_read_word(&groups[offset].tthresh[channel]));
+      Serial.print(F(" rthreshold = ")); Serial.println((unsigned char) pgm_read_word(&groups[offset].rthresh[channel]));
 
       // this is the touch threshold - setting it low makes it more like a proximity trigger
       // default value is 40 for touch
-      chips[offset].setTouchThreshold(channel, (unsigned char) pgm_read_word(&groups[offset].tthresh));
+      chips[offset].setTouchThreshold(channel, (unsigned char) pgm_read_word(&groups[offset].tthresh[channel]));
 
       // this is the release threshold - must ALWAYS be smaller than the touch threshold
       // default value is 20 for touch
-      chips[offset].setReleaseThreshold(channel, (unsigned char) pgm_read_word(&groups[offset].rthresh));
+      chips[offset].setReleaseThreshold(channel, (unsigned char) pgm_read_word(&groups[offset].rthresh[channel]));
     }
 
     chips[offset].setFFI(FFI_10);
