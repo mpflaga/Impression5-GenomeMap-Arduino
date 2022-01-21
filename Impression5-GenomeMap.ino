@@ -189,7 +189,7 @@ String getConsole() {
       Serial.print(F("  stepPos = ")); Serial.println(game->stepPos);
       serial.printf("  game->prv_gameState= '%p'(%d)\n", stateStr[game->prv_gameState], game->prv_gameState);
       game->printGameStateHistory();
-      Serial.println(F("Free RAM = ")); Serial.println(freeMemory());
+      Serial.print(F("Free RAM = ")); Serial.println(freeMemory());
 
     } else if (consoleInputStr == "G") {
       // list out history of gameState[]
@@ -199,11 +199,11 @@ String getConsole() {
         serial.printf("  gameState[%d]  = '%p'(%d)\n", idx, stateStr[game->gameState[idx]], game->gameState[idx]);
       }
       serial.printf("  plant[%d] = %p(%d)\n", 0, plants[game->plant[0]].plantName, game->plant[0]);
-      Serial.println(F("Free RAM = ")); Serial.println(freeMemory());
+      Serial.print(F("Free RAM = ")); Serial.println(freeMemory());
       
     } else if (consoleInputStr == "R") {
       game->printCurrentDesiredRegion();
-      Serial.println(F("Free RAM = ")); Serial.println(freeMemory());
+      Serial.print(F("Free RAM = ")); Serial.println(freeMemory());
 
     } else if (consoleInputStr == "?") {
       // print help describing commands.
@@ -219,7 +219,7 @@ String getConsole() {
       Serial.println(F("  0..7 - select corresponding plant"));
       Serial.println(F("  A..Z - select matching region"));
       Serial.println();
-      Serial.println(F("Free RAM = ")); Serial.println(freeMemory());
+      Serial.print(F("Free RAM = ")); Serial.println(freeMemory());
 
     } else if ( isDigit(consoleInputStr.charAt(0)) ) {
       // cross reference 0..9 to find matching plant
