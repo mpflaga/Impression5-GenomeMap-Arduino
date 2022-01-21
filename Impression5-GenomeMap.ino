@@ -25,9 +25,9 @@ tpad tpad;
 Pins ldrPins[] = {
   // {Signal Pin, GND Pin, Threshold}
   // Note - GND = 0 assumes LDR is connected to real ground.
-  {A0, A1, 700},
-  {A2, A3, 700},
-  {A4, A5, 700}
+  {A0, A1, 110},
+  {A2, A3, 110},
+  {A4, A5, 110}
 };
 
 // instanciate Driver to monitor array of photocells
