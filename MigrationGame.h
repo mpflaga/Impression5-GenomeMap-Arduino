@@ -76,7 +76,7 @@ class MigrationGame {
     int startPos;
     int endPos;
     int currentBrightness;
-    int maxBrightness = 15;
+    int maxBrightness = 255;
 
   public:
 

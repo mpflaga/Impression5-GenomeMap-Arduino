@@ -35,6 +35,7 @@ void LEDdisplay::begin() {
   currentLedPos = 0;
   currentLedOffset = 0;
   Adafruit_NeoPixel::begin();
+  setBrightness(255);
 }
 
 void LEDdisplay::colorFillRange(unsigned long color, int beginPos, int endPos) {
