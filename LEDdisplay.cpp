@@ -31,11 +31,11 @@ LEDdisplay::~LEDdisplay() {
 
    initialize LEDdisplay along with default private values and pointers.
 */
-void LEDdisplay::begin() {
+void LEDdisplay::begin(int maxBrightness_) {
   currentLedPos = 0;
   currentLedOffset = 0;
   Adafruit_NeoPixel::begin();
-  setBrightness(255);
+  setBrightness(maxBrightness_);
 }
 
 void LEDdisplay::colorFillRange(unsigned long color, int beginPos, int endPos) {

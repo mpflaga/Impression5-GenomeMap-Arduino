@@ -89,7 +89,7 @@ class MigrationGame {
     state_m gameState[10];
     state_m prv_gameState;
 
-    MigrationGame();
+    MigrationGame(int maxBrightness_ = 255);
     ~MigrationGame();
     void begin(LEDdisplay *ledDisplay);
     void begin(LEDdisplay *ledDisplay, Stream &serial);

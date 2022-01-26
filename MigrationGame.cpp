@@ -10,9 +10,9 @@
 
    reserve memory
 */
-MigrationGame::MigrationGame() {
+MigrationGame::MigrationGame(int maxBrightness_) {
   Serial.print(F("Constructed - MigrationGame::")); Serial.print(__func__); Serial.println();
-
+  maxBrightness = maxBrightness_;
 }
 
 /**

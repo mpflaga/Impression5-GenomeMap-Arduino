@@ -51,13 +51,13 @@ void setup()
 Serial.print(F("before LEDs (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
   led = new LEDdisplay(lastLED, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
 Serial.print(F("after LEDs new (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
-  led->begin();
+  led->begin(15);
 Serial.print(F("after LEDs begin (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
 
   led->testAllLEDs();
 Serial.print(F("after LEDs test (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
 
-  game = new MigrationGame();
+  game = new MigrationGame(15);
 Serial.print(F("after MigrationGame new (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
   game->begin(led, Serial);
 

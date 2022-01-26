@@ -51,7 +51,7 @@ class LEDdisplay : public Adafruit_NeoPixel {
     int currentLedPos;
     int currentLedOffset;
     int displaySize;
-    void begin();
+    void begin(int maxBrightness_ = 255);
     void colorFillRange(unsigned long color, int beginPos, int endPos);
     void colorFillAll(unsigned long color);
     LedSegments findRegionsLedRange(Countries region);
