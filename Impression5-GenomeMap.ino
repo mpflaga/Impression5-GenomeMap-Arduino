@@ -5,6 +5,9 @@
   \author  Michael Flaga, michael@.flaga.net
 */
 
+#include <EEPROM.h>
+#define EEPROMLEDBRIGHTADDRESS 0x0
+
 #include "MigrationData.h"
 
 #include "LEDdisplay.h"
@@ -37,6 +40,8 @@ int value_prv = 0; // value to monitor change in photo cells composite number
 
 void setup()
 {
+  int maxBrightness = EEPROM.read(EEPROMLEDBRIGHTADDRESS);
+
   //Serial.begin(115200);
   Serial.begin(500000);
   //while(!Serial);  // only needed if you want serial feedback with the
@@ -51,13 +56,13 @@ void setup()
 Serial.print(F("before LEDs (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
   led = new LEDdisplay(lastLED, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
 Serial.print(F("after LEDs new (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
-  led->begin(15);
+  led->begin(maxBrightness);
 Serial.print(F("after LEDs begin (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
 
   led->testAllLEDs();
 Serial.print(F("after LEDs test (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
 
-  game = new MigrationGame(15);
+  game = new MigrationGame(maxBrightness);
 Serial.print(F("after MigrationGame new (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
   game->begin(led, Serial);
 
@@ -177,6 +182,16 @@ String getConsole() {
       // Toggle the LEDs all White
       led->toggleAllLedsWhite();
 
+    } else if (consoleInputStr == "<") {
+      // Store a dim value into the EEprom
+        EEPROM.write(EEPROMLEDBRIGHTADDRESS, 15);
+        Serial.println(F("Changed EEPROM to minimal brightness"));
+
+    } else if (consoleInputStr == ">") {
+      // Store a the max(full) value into the EEprom
+        EEPROM.write(EEPROMLEDBRIGHTADDRESS, 255);
+        Serial.println(F("Changed EEPROM to max brightness"));
+
     } else if (consoleInputStr == "S") {
       // Toggle the LEDs all White
       led->showCaseMode();
@@ -214,6 +229,8 @@ String getConsole() {
       Serial.println(F("  T - Test the RGB of the LEDs"));
       Serial.println(F("  S - Show Case a Demo Sequence of LEDs"));
       Serial.println(F("  W - Toggle all the LEDs White or Off"));
+      Serial.println(F("  < - set EEPROM to dim Max LEDs"));
+      Serial.println(F("  > - set EEPROM to full Max LEDs"));
       // Serial.println(F("  L - print current LED Segment Status"));
       // Serial.println(F("  R - print next regions."));
       Serial.println(F("  0..7 - select corresponding plant"));
