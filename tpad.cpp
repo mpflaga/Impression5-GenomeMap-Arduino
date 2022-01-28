@@ -87,7 +87,7 @@ int tpad::scan() {
   for (int addr = 0; addr < SIZE_OF_CHIPS; addr++) {
     for (int pin = 0; pin < numElectrodes; pin++) {
 
-      if ((chips[addr].isNewTouch(pin)) && (touchedButtons < 2)) {
+      if ((chips[addr].isNewTouch(pin)) && ((touchedButtons < 2) || !singleTouchOnly)) {
         identifier = (int8_t) pgm_read_word(&groups[addr].identifier[pin]);
       } else if (chips[addr].isNewRelease(pin)) {
         identifier = -(int8_t) pgm_read_word(&groups[addr].identifier[pin]);

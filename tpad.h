@@ -64,6 +64,7 @@ class tpad : public MPR121_type {
     void begin(int);
     int scan();
     int interruptPin;
+    int singleTouchOnly = 0; // 1 = No multi-touches allowed.
 
   private:
     MPR121_type chips[SIZE_OF_CHIPS];
