@@ -53,18 +53,18 @@ void MigrationGame::begin(LEDdisplay *led) {
 void MigrationGame::begin(LEDdisplay *ledDisplay, Stream &serial) {
   begin(ledDisplay);
   _serial = &serial;
-  Serial.print(F("Running - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Running - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
 
   _serial->printf("  plants[%d].plantName = %s\n", 0, pgmStrToRAM(plants[0].plantName));
   _serial->printf("  ...\n");
   _serial->printf("  plants[%d].plantName = %s\n", LENGTH_OF_ARRAY(plants) - 1, pgmStrToRAM(plants[LENGTH_OF_ARRAY(plants) - 1].plantName));
 
-  Serial.print(F("Ending  - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Ending  - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
 }
 
 int MigrationGame::lookforPlant(int consoleInputNumber) {
   int response = -1;
-  Serial.print(F("Running - MigrationGame::")); Serial.print(__func__); Serial.print(F("(")); Serial.print(consoleInputNumber); Serial.println(F(")"));
+  _serial->print(F("Running - MigrationGame::")); _serial->print(__func__); _serial->print(F("(")); _serial->print(consoleInputNumber); _serial->println(F(")"));
   for (int idx = 0; ((idx < SIZE_OF_PLANTS) && (response < 0)); idx++) {
     _serial->printf("  testing %d) %p\n", idx, plants[idx].plantName);
     if (consoleInputNumber == (int) pgm_read_word(&plants[idx].placeCardID)) {
@@ -81,7 +81,7 @@ int MigrationGame::lookforRegion(String *consoleInputStr) {
   int matches = 0;
   int response = -1;
 
-  Serial.print(F("Running - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Running - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
   for (int idx = 0; idx < SIZE_OF_REGIONS; idx++) {
     String str_P((const __FlashStringHelper*) regions[idx]);
     str_P.toUpperCase();
@@ -104,33 +104,33 @@ int MigrationGame::lookforRegion(String *consoleInputStr) {
 }
 
 void MigrationGame::printPlants() {
-  Serial.print(F("Running - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Running - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
   for (int idx = 0; idx < SIZE_OF_PLANTS; idx++) {
     _serial->printf("  %d) %p\n", idx, plants[idx].plantName);
   }
-  Serial.print(F("Ending  - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Ending  - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
 }
 
 void MigrationGame::printPlantHistory() {
-  Serial.print(F("Running - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Running - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
   _serial->println(F("History of Plants selected:"));
   for (int idx = (LENGTH_OF_ARRAY(plant) - 1); idx >= 0 ; idx--) {
     _serial->printf("  plant[%d] = %p(%d)\n", idx, plants[plant[idx]].plantName, plant[idx]);
   }
-  Serial.print(F("Ending  - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Ending  - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
 }
 
 void MigrationGame::printGameStateHistory() {
-  Serial.print(F("Running - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Running - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
   _serial->println(F("History of gameState:"));
   for (int idx = 0; idx < LENGTH_OF_ARRAY(gameState); idx++) {
     _serial->printf("  gameState[%d]  = '%p'(%d)\n", idx, stateStr[gameState[idx]], gameState[idx]);
   }
-  Serial.print(F("Ending  - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Ending  - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
 }
 
 void MigrationGame::printPlantsWithLED() {
-  Serial.print(F("Running - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Running - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
   for (int plantPos = 0; plantPos < SIZE_OF_PLANTS; plantPos++) {
     //_serial->printf("  plants[%d].plantName = %s\n", plantPos, pgmStrToRAM(plants[plantPos].plantName));
     _serial->printf("  plants[%d].\n", plantPos);
@@ -146,7 +146,7 @@ void MigrationGame::printPlantsWithLED() {
             _serial->printf("        nextButtons[%d]  = '%d' : ", nButtonPos, nextLedSeg);
             
             
-            Serial.print(F("(FR=")); Serial.print(freeMemory()); Serial.print(F(") "));
+            _serial->print(F("(FR=")); _serial->print(freeMemory()); _serial->print(F(") "));
             
             for (int ledpos = (int) pgm_read_word(&ledSegs[nextLedSeg].startPos);
                  ledpos <= (int) pgm_read_word(&ledSegs[nextLedSeg].endPos);
@@ -166,7 +166,7 @@ void MigrationGame::printPlantsWithLED() {
               ledSegPos -= SIZE_OF_LEDSEGS;
             }
             _serial->printf("        steps[%d]  = '%d'(%s) : ", nStepPos, ledSegPos, reverse ? "R" : "A");
-            Serial.print(F("(FR=")); Serial.print(freeMemory()); Serial.print(F(") "));
+            _serial->print(F("(FR=")); _serial->print(freeMemory()); _serial->print(F(") "));
             int endPos = 0;
             int startPos = 0;
 
@@ -189,25 +189,25 @@ void MigrationGame::printPlantsWithLED() {
       }
     }
   }
-  Serial.print(F("Ending  - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Ending  - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
   _serial->printf("\n");
 }
 
 void MigrationGame::printRegions() {
-  Serial.print(F("Running - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Running - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
   for (int idx = 0; idx < SIZE_OF_REGIONS; idx++) {
     _serial->printf("  %d) %p\n", ++idx, regions[idx]);
   }
-  Serial.print(F("Ending  - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Ending  - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
 }
 
 void MigrationGame::printRegionHistory() {
-  Serial.print(F("Running - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Running - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
   _serial->println(F("History of Regions selected:"));
   for (int idx = (LENGTH_OF_ARRAY(region) - 1); idx >= 0 ; idx--) {
     _serial->printf("  region[%d] = %p(%d)\n", idx, regions[region[idx]], region[idx]);
   }
-  Serial.print(F("Ending  - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Ending  - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
 }
 
 
@@ -266,7 +266,7 @@ void MigrationGame::updateRegion(int newRegion) {
     printRegionHistory();
   }
 
-  Serial.print(F("Ending  - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Ending  - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
 }
 
 void MigrationGame::updateGameState(state_m newState) {
@@ -279,11 +279,11 @@ void MigrationGame::updateGameState(state_m newState) {
   // set new state.
   gameState[0] = newState;
 
-  Serial.print(F("Ending  - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Ending  - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
 }
 
 int MigrationGame::printCurrentDesiredRegion() {
-  Serial.print(F("Running - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Running - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
   return checkIfMatchCurrentDesiredRegions(0); // Force a no match, to cause prints of all of them.
 }
 
@@ -317,7 +317,7 @@ bool MigrationGame::checkIfMatchCurrentDesiredRegions(int nextRegionIdx) {
 }
 
 bool MigrationGame::checkIfAtEndOfRegions() {
-  Serial.print(F("Running - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Running - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
 
   _serial->printf("  Next Hop button = '%d'\n", (int) pgm_read_word(&plants[plant[0]].hops[hopPos].nextButtons[0]));
   _serial->printf("  Next Hop Message = '%p'\n", plants[plant[0]].hops[hopPos].textMSG);
@@ -470,7 +470,7 @@ void MigrationGame::checkGameStateMachine() {
         int nextLedSeg = (int) pgm_read_word(&plants[plant[0]].hops[hopPos].nextButtons[nButtonPos]);
         if (nextLedSeg > 0) {
           _serial->printf("        nextButtons[%d]  = '%d' : ", nButtonPos, nextLedSeg);
-          Serial.print(F("(FR=")); Serial.print(freeMemory()); Serial.print(F(") "));
+          _serial->print(F("(FR=")); _serial->print(freeMemory()); _serial->print(F(") "));
 
           _led->colorFillRange(_led->Color( GREEN ),
                                (int) pgm_read_word(&ledSegs[nextLedSeg].startPos),
@@ -518,7 +518,7 @@ void MigrationGame::checkGameStateMachine() {
             reverse = false;
           }
           _serial->printf("        steps[%d]  = '%d'(%s) : \n", stepPos, ledSegPos, reverse ? "R" : "A");
-          Serial.print(F("(FR=")); Serial.print(freeMemory()); Serial.print(F(") "));
+          _serial->print(F("(FR=")); _serial->print(freeMemory()); _serial->print(F(") "));
 
           updateGameState(START_DRAWING_SEGMENT);
 
@@ -556,7 +556,7 @@ void MigrationGame::checkGameStateMachine() {
       _serial->println("Press Enter to Continue.");
 
       while (!Serial.available()) { }
-      Serial.println(Serial.read());
+      _serial->println(Serial.read());
 #endif // pause between each segement.
 
       ledDelayMillis = 10 / 5; // MPF - WIP keep low to speed up development.
@@ -588,7 +588,7 @@ void MigrationGame::checkGameStateMachine() {
         _serial->printf("%d, ", ledpos);
         _led->setPixelColor(ledpos, _led->Color( WHITE ));
         _led->show();
-        Serial.print(F("(FR=")); Serial.print(freeMemory()); Serial.print(F(") "));
+        _serial->print(F("(FR=")); _serial->print(freeMemory()); _serial->print(F(") "));
         
         // _serial->printf("\n  ledSegPos = %d(%s), startPos = %d, endPos = %d, ledpos = %d\n", ledSegPos, (reverse ? "R" : "A"), startPos, endPos, ledpos);
 
@@ -668,7 +668,7 @@ void MigrationGame::checkGameStateMachine() {
 void MigrationGame::redrawMigration(int currentHop, unsigned long segmentColor, unsigned long buttonColor) {
   LedSegments segment;
 
-  Serial.print(F("Running - MigrationGame::")); Serial.print(__func__); Serial.println(F("()"));
+  _serial->print(F("Running - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
 
   segment.startPos = (int) pgm_read_word(&ledSegs[(int) pgm_read_word(&plants[plant[0]].beginRingID)].startPos);
   segment.endPos =   (int) pgm_read_word(&ledSegs[(int) pgm_read_word(&plants[plant[0]].beginRingID)].endPos);
@@ -693,7 +693,7 @@ void MigrationGame::redrawMigration(int currentHop, unsigned long segmentColor, 
         int nextLedSeg = (int) pgm_read_word(&plants[plant[0]].hops[hop].nextButtons[nButtonPos]);
         if (nextLedSeg > 0) {
           _serial->printf("        nextButtons[%d]  = '%d' : ", nButtonPos, nextLedSeg);
-          Serial.print(F("(FR=")); Serial.print(freeMemory()); Serial.print(F(") "));
+          _serial->print(F("(FR=")); _serial->print(freeMemory()); _serial->print(F(") "));
           
           for (int ledpos = (int) pgm_read_word(&ledSegs[nextLedSeg].startPos);
                ledpos <= (int) pgm_read_word(&ledSegs[nextLedSeg].endPos);
@@ -716,7 +716,7 @@ void MigrationGame::redrawMigration(int currentHop, unsigned long segmentColor, 
             ledSegPos -= SIZE_OF_LEDSEGS;
           }
           _serial->printf("        steps[%d]  = '%d'(%s) : ", nStepPos, ledSegPos, reverse ? "R" : "A");
-          Serial.print(F("(FR=")); Serial.print(freeMemory()); Serial.print(F(") "));
+          _serial->print(F("(FR=")); _serial->print(freeMemory()); _serial->print(F(") "));
           int endPos = 0;
           int startPos = 0;
 
