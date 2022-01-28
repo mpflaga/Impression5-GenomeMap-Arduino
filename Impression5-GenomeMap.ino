@@ -24,18 +24,17 @@ const uint8_t MPR121_INT = 12;  // pin 4 is the MPR121 interrupt on the Bare Tou
 
 tpad tpad;
 
-#include "PhotoCellNumber.h"
-Pins ldrPins[] = {
+#include "RFid.h"
+Pins ldrPins =
   // {Signal Pin, GND Pin, Threshold}
   // Note - GND = 0 assumes LDR is connected to real ground.
-  {A0, A1, 110},
-  {A2, A3, 110},
-  {A4, A5, 110}
-};
+{A6, A7 };
+
+RFid RFid(ldrPins, (int) 10);
 
 // instanciate Driver to monitor array of photocells
-PhotoCellNumber PhotoCellNumber(ldrPins, sizeof(ldrPins) / sizeof(ldrPins[0]), 10);
-int value_prv = 0; // value to monitor change in photo cells composite number
+// PhotoCellNumber PhotoCellNumber(ldrPins, sizeof(ldrPins) / sizeof(ldrPins[0]), 10);
+// int value_prv = 0; // value to monitor change in photo cells composite number
 
 
 void setup()
@@ -73,29 +72,8 @@ Serial.print(F("after MigrationGame new (FR=")); Serial.print(freeMemory()); Ser
 
   tpad.begin(MPR121_INT);
 
-  PhotoCellNumber.setInterval(50, 500); // set sample period and threshold for all bits.`
-  PhotoCellNumber.ldr[0]->setThreshold(501); // set threshold for individual bits.
-  PhotoCellNumber.ldr[1]->setThreshold(502);
-  PhotoCellNumber.ldr[2]->setThreshold(503);
-
-  PhotoCellNumber.setInvert(false); // invert all bits. default is false.
-  // PhotoCellNumber.ldr[0]->setInvert(true); // invert individual bits.
-  // PhotoCellNumber.ldr[1]->setInvert(true);
-  // PhotoCellNumber.ldr[2]->setInvert(true);
-
-  for (int i = 0; i < sizeof(ldrPins) / sizeof(ldrPins[0]); i++)
-  {
-    Serial.print(F("PhotoCellNumber.ldr[")); Serial.print(i); Serial.print(F("] = "));
-    PhotoCellNumber.ldr[i]->PrintPins();
-  }
-  Serial.println();
-  PhotoCellNumber.printArray();
-
-  Serial.print(F("initial value = ")); Serial.println(PhotoCellNumber.value);
-  value_prv = PhotoCellNumber.value;
-#define PRINT_TIME_STAMPS 0 // 1 = ON, 0 = OFF
-#define PRINT_VALUES 0
-  PhotoCellNumber.setDebugMask( PRINT_TIME_STAMPS << 1 | PRINT_VALUES << 0 );
+  Serial1.begin(9600);
+  RFid.begin(Serial1);
 
   // print build stat's.
   Serial.print(F("Build Date: ")); Serial.print(F(__DATE__)); Serial.print(F(" ")); Serial.println(F(__TIME__));
@@ -115,31 +93,53 @@ void loop()
     serial.printf("TouchPad accepted entered Region index %d %p(%d)\n", nextRegionIdx, regions[game->region[0]], game->region[0]);
   }
 
-  PhotoCellNumber.update();
-  if (PhotoCellNumber.value != value_prv) {
-    value_prv = PhotoCellNumber.value;
-
-    int nextPlantIdx = -1;  //= game->lookforPlant(value_prv) + 1;
-    for (int idx = 0; ((idx < SIZE_OF_PLANTS) && (nextPlantIdx < 0)); idx++) {
-      if (PhotoCellNumber.value == (int) pgm_read_word(&plants[idx].placeCardID)) {
-        nextPlantIdx = idx;
-      }
-    }
-    if ( nextPlantIdx > -1)
-    {
-      Serial.print(F("PlantID = ")); Serial.println(nextPlantIdx);
-
-      // when positive value will be index of plant.
+  if ( RFid.available() ) {
+    int nextPlantIdx = RFid.read();
+    Serial.print(F("Detected Card ID = ")); Serial.println(nextPlantIdx);
+    if (nextPlantIdx > -1) {
       if (game->updatePlant(nextPlantIdx)) {
         // when a different plant, update settings
-        Serial.println(F("Plant Updated"));
+        Serial.println(F("Plant Updated."));
 
       } else {
         // when same plant, do nothing
-        Serial.println(F("No Change in Plant"));
+        Serial.println(F("No Change in Plant."));
       }
     }
+    else {
+      nextPlantIdx = 0;
+      Serial.println(F("Plant Card Removed."));
+      game->updatePlant(nextPlantIdx);
+    }
+    Serial.print(F("Changed plant to ")); Serial.println(nextPlantIdx);
+
   }
+
+//  PhotoCellNumber.update();
+//  if (PhotoCellNumber.value != value_prv) {
+//    value_prv = PhotoCellNumber.value;
+//
+//    int nextPlantIdx = -1;  //= game->lookforPlant(value_prv) + 1;
+//    for (int idx = 0; ((idx < SIZE_OF_PLANTS) && (nextPlantIdx < 0)); idx++) {
+//      if (PhotoCellNumber.value == (int) pgm_read_word(&plants[idx].placeCardID)) {
+//        nextPlantIdx = idx;
+//      }
+//    }
+//    if ( nextPlantIdx > -1)
+//    {
+//      Serial.print(F("PlantID = ")); Serial.println(nextPlantIdx);
+//
+//      // when positive value will be index of plant.
+//      if (game->updatePlant(nextPlantIdx)) {
+//        // when a different plant, update settings
+//        Serial.println(F("Plant Updated"));
+//
+//      } else {
+//        // when same plant, do nothing
+//        Serial.println(F("No Change in Plant"));
+//      }
+//    }
+//  }
 
   String response = getConsole();
   if (response.length() > 0) {
