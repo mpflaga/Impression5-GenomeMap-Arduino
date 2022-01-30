@@ -138,22 +138,22 @@ void MigrationGame::printPlantsWithLED() {
     _serial->printf("    placeCardID  = %d\n", (int) pgm_read_word(&plants[plantPos].placeCardID));
     for (int hop = 0; hop < SIZE_OF_HOPS; hop++) {
       if ((int) pgm_read_word(plants[plantPos].hops[hop].textMSG) != 0) {
-        _serial->printf("    hops[%d].\n", hop);
-        _serial->printf("      textMSG    = '%p'\n", plants[plantPos].hops[hop].textMSG);
+       // _serial->printf("    hops[%d].\n", hop);
+       // _serial->printf("      textMSG    = '%p'\n", plants[plantPos].hops[hop].textMSG);
         for (int nButtonPos = 0; nButtonPos < SIZE_OF_NEXTBUTTONS; nButtonPos++) {
           int nextLedSeg = (int) pgm_read_word(&plants[plantPos].hops[hop].nextButtons[nButtonPos]);
           if (nextLedSeg > 0) {
-            _serial->printf("        nextButtons[%d]  = '%d' : ", nButtonPos, nextLedSeg);
+           // _serial->printf("        nextButtons[%d]  = '%d' : ", nButtonPos, nextLedSeg);
             
             
-            _serial->print(F("(FR=")); _serial->print(freeMemory()); _serial->print(F(") "));
+           // _serial->print(F("(FR=")); _serial->print(freeMemory()); _serial->print(F(") "));
             
             for (int ledpos = (int) pgm_read_word(&ledSegs[nextLedSeg].startPos);
                  ledpos <= (int) pgm_read_word(&ledSegs[nextLedSeg].endPos);
                  ledpos++) {
-              _serial->printf("%d, ", ledpos);
+             // _serial->printf("%d, ", ledpos);
             }
-            _serial->printf("\n");
+           // _serial->printf("\n");
           }
         }
         for (int nStepPos = 0; nStepPos < SIZE_OF_STEPS; nStepPos++) {
@@ -165,8 +165,8 @@ void MigrationGame::printPlantsWithLED() {
               reverse = true;
               ledSegPos -= SIZE_OF_LEDSEGS;
             }
-            _serial->printf("        steps[%d]  = '%d'(%s) : ", nStepPos, ledSegPos, reverse ? "R" : "A");
-            _serial->print(F("(FR=")); _serial->print(freeMemory()); _serial->print(F(") "));
+           // _serial->printf("        steps[%d]  = '%d'(%s) : ", nStepPos, ledSegPos, reverse ? "R" : "A");
+           // _serial->print(F("(FR=")); _serial->print(freeMemory()); _serial->print(F(") "));
             int endPos = 0;
             int startPos = 0;
 
@@ -174,23 +174,23 @@ void MigrationGame::printPlantsWithLED() {
               startPos = (int) pgm_read_word(&ledSegs[ledSegPos].endPos);
               endPos = (int) pgm_read_word(&ledSegs[ledSegPos].startPos);
               for (int ledpos = startPos; ledpos >= endPos; ledpos--) {
-                _serial->printf("%d, ", ledpos);
+               // _serial->printf("%d, ", ledpos);
               }
             } else {
               startPos = (int) pgm_read_word(&ledSegs[ledSegPos].startPos);
               endPos = (int) pgm_read_word(&ledSegs[ledSegPos].endPos);
               for (int ledpos = startPos; ledpos <= endPos; ledpos++) {
-                _serial->printf("%d, ", ledpos);
+               // _serial->printf("%d, ", ledpos);
               }
             }
-            _serial->printf("\n");
+           // _serial->printf("\n");
           }
         }
       }
     }
   }
   // _serial->print(F("Ending  - MigrationGame::")); _serial->print(__func__); _serial->println(F("()"));
-  _serial->printf("\n");
+  // _serial->printf("\n");
 }
 
 void MigrationGame::printRegions() {
@@ -365,7 +365,7 @@ void MigrationGame::checkGameStateMachine() {
 
     case PLANT_INTIALLY_SELECTED:
 
-      _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
+      // _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
       currentBrightness = maxBrightness;
       _led->setBrightness(currentBrightness);
       _led->colorFillAll(_led->Color( WHITE ));
@@ -411,13 +411,13 @@ void MigrationGame::checkGameStateMachine() {
       break;
 
     case PLANT_INTIALLY_DIMMING_ALL_FINISHED:
-      _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
+      // _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
       updateGameState(PLANT_INTIAL_START_POSITION);
       prv_region = region[0];  //0; // initialize as none, or current value.
       break;
 
     case PLANT_INTIAL_START_POSITION:
-      _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
+     // _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
       currentBrightness = maxBrightness;
       _led->setBrightness(currentBrightness);
       segment.startPos = (int) pgm_read_word(&ledSegs[(int) pgm_read_word(&plants[plant[0]].beginRingID)].startPos);
@@ -430,7 +430,7 @@ void MigrationGame::checkGameStateMachine() {
 
     case PLANT_ACCEPTED_WAITING_FOR_BUTTON:
       if (prv_region != region[0]) {
-        _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
+       // _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
         // _serial->printf("Accepting new Region %p(%d)\n", regions[region[0]], region[0]);
         prv_region = region[0];
 
@@ -446,7 +446,7 @@ void MigrationGame::checkGameStateMachine() {
       break;
 
     case INCORRECT_REGION_SELECTED:
-      _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
+     // _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
       currentBrightness = maxBrightness;
       _led->setBrightness(currentBrightness);
 
@@ -458,7 +458,7 @@ void MigrationGame::checkGameStateMachine() {
       break;
 
     case CORRECT_REGION_SELECTED:
-      _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
+     // _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
       currentBrightness = maxBrightness;
       _led->setBrightness(currentBrightness);
 
@@ -494,7 +494,7 @@ void MigrationGame::checkGameStateMachine() {
       break;
 
     case START_DRAWING_LINE_TO_REGION:
-      _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
+     // _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
       printCurrentDesiredRegion();
 
       stepPos = 0;
@@ -577,7 +577,7 @@ void MigrationGame::checkGameStateMachine() {
 
       if (currentLoopMillis > ledNextMillis) {
 #if 0 // extra debug typically not needed.
-        _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
+       // _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
 
         // _serial->print("currentLoopMillis = "); _serial->print(currentLoopMillis);
         // _serial->print(" ledNextMillis = "); _serial->print(ledNextMillis);
@@ -624,7 +624,7 @@ void MigrationGame::checkGameStateMachine() {
       break;
 
     case FINISHED_LINE_TO_REGION:
-      _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
+     // _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
 
       hopPos++;
       // _serial->printf("  hopPos  = %d\n", hopPos);
@@ -642,19 +642,19 @@ void MigrationGame::checkGameStateMachine() {
       break;
 
     case BEGIN_WIN: // MPF - WIP for testing.
-      _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
+     // _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
       updateGameState(END_WIN);
       break;
 
     case END_WIN: // MPF - WIP for testing.
-      _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
+     // _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
 
         redrawMigration();
         updateGameState(WIN_IDLE);
       break;
 
     case WIN_IDLE: // MPF - WIP for testing.
-      /*      _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
+      /*     // _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
            delay(1000); */
       break;
 
@@ -687,22 +687,22 @@ void MigrationGame::redrawMigration(int currentHop, unsigned long segmentColor, 
 
   for (int hop = 0; hop < currentHop; hop++) {
     if ((int) pgm_read_word(plants[plant[0]].hops[hop].textMSG) != 0) {
-      _serial->printf("    hops[%d].\n", hop);
+     // _serial->printf("    hops[%d].\n", hop);
 
       // loop thru all the buttons
       for (int nButtonPos = 0; nButtonPos < SIZE_OF_NEXTBUTTONS; nButtonPos++) {
         int nextLedSeg = (int) pgm_read_word(&plants[plant[0]].hops[hop].nextButtons[nButtonPos]);
         if (nextLedSeg > 0) {
-          _serial->printf("        nextButtons[%d]  = '%d' : ", nButtonPos, nextLedSeg);
-          _serial->print(F("(FR=")); _serial->print(freeMemory()); _serial->print(F(") "));
+         // _serial->printf("        nextButtons[%d]  = '%d' : ", nButtonPos, nextLedSeg);
+         // _serial->print(F("(FR=")); _serial->print(freeMemory()); _serial->print(F(") "));
           
           for (int ledpos = (int) pgm_read_word(&ledSegs[nextLedSeg].startPos);
                ledpos <= (int) pgm_read_word(&ledSegs[nextLedSeg].endPos);
                ledpos++) {
-            _serial->printf("%d, ", ledpos);
+           // _serial->printf("%d, ", ledpos);
             _led->setPixelColor(ledpos - 1, buttonColor);
           }
-          _serial->printf("\n");
+         // _serial->printf("\n");
         }
       }
 
@@ -716,8 +716,8 @@ void MigrationGame::redrawMigration(int currentHop, unsigned long segmentColor, 
             reverse = true;
             ledSegPos -= SIZE_OF_LEDSEGS;
           }
-          _serial->printf("        steps[%d]  = '%d'(%s) : ", nStepPos, ledSegPos, reverse ? "R" : "A");
-          _serial->print(F("(FR=")); _serial->print(freeMemory()); _serial->print(F(") "));
+         // _serial->printf("        steps[%d]  = '%d'(%s) : ", nStepPos, ledSegPos, reverse ? "R" : "A");
+         // _serial->print(F("(FR=")); _serial->print(freeMemory()); _serial->print(F(") "));
           int endPos = 0;
           int startPos = 0;
 
@@ -725,7 +725,7 @@ void MigrationGame::redrawMigration(int currentHop, unsigned long segmentColor, 
             startPos = (int) pgm_read_word(&ledSegs[ledSegPos].endPos);
             endPos = (int) pgm_read_word(&ledSegs[ledSegPos].startPos);
             for (int ledpos = startPos; ledpos >= endPos; ledpos--) {
-              _serial->printf("%d, ", ledpos);
+             // _serial->printf("%d, ", ledpos);
               _led->setPixelColor(ledpos - 1, segmentColor);
 
             }
@@ -733,11 +733,11 @@ void MigrationGame::redrawMigration(int currentHop, unsigned long segmentColor, 
             startPos = (int) pgm_read_word(&ledSegs[ledSegPos].startPos);
             endPos = (int) pgm_read_word(&ledSegs[ledSegPos].endPos);
             for (int ledpos = startPos; ledpos <= endPos; ledpos++) {
-              _serial->printf("%d, ", ledpos);
+             // _serial->printf("%d, ", ledpos);
               _led->setPixelColor(ledpos - 1, segmentColor);
             }
           }
-          _serial->printf("\n");
+         // _serial->printf("\n");
         }
       }
     }
