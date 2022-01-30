@@ -43,6 +43,7 @@ void setup()
 
   //Serial.begin(115200);
   Serial.begin(500000);
+  Serial.print(F("Free RAM after Serial Started is = ")); Serial.println(freeMemory());
   //while(!Serial);  // only needed if you want serial feedback with the
   // Arduino Leonardo or Bare Touch Board
   Serial.println();
@@ -52,17 +53,11 @@ void setup()
 
   Serial.print(F("Instanced ")); Serial.print(lastLED); Serial.println(F(" LED NeoPixel strip."));
 
-Serial.print(F("before LEDs (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
   led = new LEDdisplay(lastLED, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
-Serial.print(F("after LEDs new (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
   led->begin(maxBrightness);
-Serial.print(F("after LEDs begin (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
-
   led->testAllLEDs();
-Serial.print(F("after LEDs test (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
 
   game = new MigrationGame(maxBrightness);
-Serial.print(F("after MigrationGame new (FR=")); Serial.print(freeMemory()); Serial.println(F(") "));
   game->begin(led, Serial);
 
 #if 0  // print out all data structures (if debug is enabled).
@@ -71,17 +66,15 @@ Serial.print(F("after MigrationGame new (FR=")); Serial.print(freeMemory()); Ser
 #endif
 
   tpad.begin(MPR121_INT);
-
   Serial1.begin(9600);
   RFid.begin(Serial1);
 
   // print build stat's.
   Serial.print(F("Build Date: ")); Serial.print(F(__DATE__)); Serial.print(F(" ")); Serial.println(F(__TIME__));
-  serial.printf("game->gameState[0] = '%d'(%p)\n", game->gameState[0], stateStr[game->gameState[0]]);
+  Serial.print(F("Free RAM at end of setup() is = ")); Serial.println(freeMemory());
+  Serial.print(F("Ending  - ")); Serial.print(__func__); Serial.println(F("()"));
 
   Serial.println(F("Enter in State Change?"));
-
-  Serial.print(F("Ending  - ")); Serial.print(__func__); Serial.println(F("()"));
 }
 
 void loop()
@@ -192,7 +185,6 @@ String getConsole() {
       
     } else if (consoleInputStr == "R") {
       game->printCurrentDesiredRegion();
-      Serial.print(F("Free RAM = ")); Serial.println(freeMemory());
 
     } else if (consoleInputStr == "?") {
       // print help describing commands.
