@@ -182,6 +182,8 @@ String getConsole() {
       }
       serial.printf("  plant[%d] = %p(%d)\n", 0, plants[game->plant[0]].plantName, game->plant[0]);
       Serial.print(F("Free RAM = ")); Serial.println(freeMemory());
+      Serial.print(F("RFid.average = ")); Serial.println(RFid.average);
+      Serial.print(F("RFid.threshold = ")); Serial.println(RFid.threshold);
       
     } else if (consoleInputStr == "R") {
       game->printCurrentDesiredRegion();

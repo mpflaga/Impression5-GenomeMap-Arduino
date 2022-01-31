@@ -8,17 +8,16 @@
 #ifndef RFid_h
 #define RFid_h
 #include "CRC32.h"
-#include "PhotoDetector.h"
+#include "PhotCellArrayAveraged.h"
 #include "RFidData.h"
 
-class RFid : public PhotoDetector {
+class RFid : public PhotoCell {
   public:
     RFid(Pins _pins, int samples);
     ~RFid();
 void begin(Stream &serialRFid);
     bool available();
     int read();
-    int photoCellValueWhenDetected;
     bool cardPresent;
 
   protected:
@@ -28,6 +27,8 @@ void begin(Stream &serialRFid);
     int detectedChipID;
     CRC32 crc;
     uint32_t lastDetectedCRC32;
+    unsigned int delayToSampleThreshold = 1000;
+    long unsigned whenToSampleThreshold;
 };
 
 #endif

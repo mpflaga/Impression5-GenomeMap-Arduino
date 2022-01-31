@@ -1,7 +1,7 @@
 #include "RFid.h"
 
 // Constructor
-RFid::RFid(Pins _pins, int samples) : PhotoDetector( _pins, samples)
+RFid::RFid(Pins _pins, int samples) : PhotoCell( _pins, samples)
 {
   // Initialize Tag reader memory.
   memset(RFidBuffer, 0x0, LENGTH_OF_ARRAY(RFidBuffer));
@@ -21,8 +21,8 @@ void RFid::begin(Stream &serialRFid) {
   _serialRFid = &serialRFid;
   detectedChipID = -1;
   cardPresent = 0;
-  photoCellValueWhenDetected = 0;
-
+  whenToSampleThreshold = 0;
+  
   // initialize the CRC calculator.
   crc.reset();
   //crc.setPolynome(0x04C11DB8);
@@ -42,19 +42,18 @@ void RFid::begin(Stream &serialRFid) {
     Serial.println();
 
   }
-  //PhotoDetector::setInterval(100, 1000);
-
 }
 
 bool RFid::available() {
   bool result = 0;
   int diff = 0;
   int percent = 0;
+  long unsigned currentTime = millis();
 
-  PhotoDetector::update();
+  updateReading();
 
   // Look for new RF tag data.
-  while (_serialRFid->available()) {
+  if (_serialRFid->available()) {
     // At least on new character is detected.
 
     int inByte = _serialRFid->read();
@@ -76,15 +75,18 @@ bool RFid::available() {
 
     if (inByte == 0x02) {
       // Detected First Character of an RFid tag.
-
+      // Serial.print(F("STX detected'"));
+      // Serial.print(F(", RFidBuffer_pos = '"));  Serial.print(RFidBuffer_pos); Serial.println(F("'"));
       RFidBuffer_pos = 0;
       memset(RFidBuffer, 0x0, LENGTH_OF_ARRAY(RFidBuffer));
       detectedChipID = -1;
 
     }
-    if (inByte == 0x03) {
+    if (inByte == 0x03 && RFidBuffer_pos == LENGTH_OF_ARRAY(RFidBuffer) - 1 ) {
       // Detected End Character of an RFid tag.
 
+      // Serial.print(F("ETX detected'"));
+      // Serial.print(F(", RFidBuffer_pos = '"));  Serial.print(RFidBuffer_pos); Serial.println(F("'"));
       crc.reset();
       crc.add((uint8_t*) RFidBuffer, 12);
       if (lastDetectedCRC32 != crc.getCRC() ) {
@@ -96,6 +98,7 @@ bool RFid::available() {
           if (!strcmp_P(RFidBuffer, RFtags[idx].cardId)) { // strcmp_P returns 0 when match.
             // when a match is found.
             detectedChipID = (int) pgm_read_word(&RFtags[idx].placeCardID);
+            Serial.print(F("Match found, detectedChipID = '"));  Serial.print(detectedChipID); Serial.println(F("'"));
             result = 1;
             break;
           }
@@ -105,20 +108,33 @@ bool RFid::available() {
           Serial.print(F("Unknown RfID tag = '"));  Serial.print(RFidBuffer); Serial.print(F("'"));
           Serial.print(F(", CRC32 = '"));  Serial.print(crc.getCRC()); Serial.println(F("'"));
         }
+        
+        whenToSampleThreshold = (long unsigned) (whenToSampleThreshold + currentTime);        
+        cardPresent = true;
 
-        cardPresent = 1;
-        PhotoDetector::detectorState = cardPresent;
-
-        photoCellValueWhenDetected = PhotoDetector::getAvg();
-        // Serial.print(F("Card Detected, photoCellValueWhenDetected = '"));  Serial.print(photoCellValueWhenDetected); Serial.println(F("'"));
-        // Serial.print(F("PhotoDetector::detectorState = '"));  Serial.print(PhotoDetector::detectorState); Serial.println(F("'"));
+        thresholdStatus = cardPresent;
+        Serial.print(F("Card Detected, "));
+        Serial.print(F("PhotoCell::average = ")); Serial.print(average);
+        Serial.print(F(", PhotoCell::threshold = ")); Serial.println(threshold);
       }
     }
   }
+  
+  if ( (whenToSampleThreshold != 0) && (currentTime > whenToSampleThreshold)) {
+    Serial.print(F("Threshold was set, "));
+    Serial.print(F("PhotoCell::average = ")); Serial.print(average);
+    Serial.print(F(", PhotoCell::threshold = ")); Serial.println(threshold);
+    threshold = average - 20 ;
+    whenToSampleThreshold = 0;
+    Serial.print(F(", new threshold = ")); Serial.println(threshold);
+  }
 
-  if (cardPresent && !PhotoDetector::detectorState) {
-    // Serial.println(F("Card was Removed!!!!"));
-    cardPresent = PhotoDetector::detectorState;
+  if (cardPresent && !thresholdStatus) {
+    Serial.print(F("Card was Removed, "));
+    Serial.print(F("PhotoCell::average = ")); Serial.print(average);
+    Serial.print(F(", PhotoCell::threshold = ")); Serial.println(threshold);
+
+    cardPresent = thresholdStatus;
     detectedChipID = -1;
     result = 1;
     lastDetectedCRC32 = 0x0;
