@@ -27,7 +27,7 @@ void begin(Stream &serialRFid);
     int detectedChipID;
     CRC32 crc;
     uint32_t lastDetectedCRC32;
-    unsigned int delayToSampleThreshold = 1000;
+    unsigned int delayToSampleThreshold = 2000;
     long unsigned whenToSampleThreshold;
 };
 
