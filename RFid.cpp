@@ -124,7 +124,7 @@ bool RFid::available() {
     Serial.print(F("Threshold was set, "));
     Serial.print(F("PhotoCell::average = ")); Serial.print(average);
     Serial.print(F(", PhotoCell::threshold = ")); Serial.println(threshold);
-    threshold = average - 20 ;
+    threshold = average / 2 ;
     whenToSampleThreshold = 0;
     Serial.print(F(", new threshold = ")); Serial.println(threshold);
   }
