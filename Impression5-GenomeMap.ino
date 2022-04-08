@@ -40,6 +40,7 @@ RFid RFid(ldrPins, (int) 10);
 void setup()
 {
   int maxBrightness = EEPROM.read(EEPROMLEDBRIGHTADDRESS);
+  //EEPROM.update(EEPROMLEDBRIGHTADDRESS, (int) 50); // MPF to set for Lab purposes
 
   //Serial.begin(115200);
   Serial.begin(500000);
@@ -55,7 +56,31 @@ void setup()
 
   led = new LEDdisplay(lastLED, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
   led->begin(maxBrightness);
-  led->testAllLEDs();
+  
+ if (maxBrightness > 255) {
+   // then in Demo Lab 
+    led->testAllLEDs(); // 1/4s for R, G and B.
+ } 
+ else {
+   // I5 - requested this.
+   led->colorFillAll(led->Color( WHITE ));
+   delay(10000);
+   led->colorFillAll(led->Color( OFF ));
+
+//    for (int pulse_counter = 0; pulse_counter < 3; pulse_counter++) {
+//      for (int bcolor = 127; bcolor <= 255; bcolor += 10) {
+//        //Serial.print("bcolor = "); Serial.println(bcolor);
+//        led->colorFillAllRegions(led->Color( 0, bcolor, 0 ));
+//      }
+//
+//      for (int bcolor = 255; bcolor > 127; bcolor -= 10) {
+//        //Serial.print("bcolor = "); Serial.println(bcolor);
+//        led->colorFillAllRegions(led->Color( 0, bcolor, 0 ));
+//      }
+//    }
+//    // delay(1000);
+ }
+ led->colorFillAll(led->Color( OFF ));
 
   game = new MigrationGame(maxBrightness);
   game->begin(led, Serial);
@@ -224,7 +249,7 @@ String getConsole() {
       // Check if text matches new Region (aka NEW HOP)!
       int nextRegionIdx = game->lookforRegion(&consoleInputStr);
       if (nextRegionIdx < 0) {
-        Serial.print(F("No Change"));
+        Serial.println(F("No Change"));
       } else {
         game->updateRegion(nextRegionIdx);
         serial.printf("Console accepted entered Region index %d %p(%d)\n", nextRegionIdx, regions[game->region[0]], game->region[0]);

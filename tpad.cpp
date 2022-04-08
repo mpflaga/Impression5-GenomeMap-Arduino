@@ -66,9 +66,9 @@ void tpad::begin(int IRQpin) {
     chips[offset].setFFI(FFI_10);
     chips[offset].setSFI(SFI_10);
     chips[offset].setGlobalCDT(CDT_500NS);  // reasonable for larger capacitances
-    delay(500);
+    //delay(500);
     chips[offset].autoSetElectrodes();  // autoset all electrode settings
-    delay(500);
+    //delay(500);
 
     // initial data update
     chips[offset].updateTouchData();

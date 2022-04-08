@@ -286,20 +286,29 @@ void MigrationGame::checkGameStateMachine() {
     case NO_PLANT_SELECTED:
       _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
       _led->colorFillAll(_led->Color( OFF ));
+      touchNextMillis = uint32_t (currentLoopMillis + 500);
       updateGameState(NO_PLANT_PRIMED);
       break;
 
     case NO_PLANT_PRIMED:
         // do nothing and wait for external stimulus, such as button.
+
+        if (currentLoopMillis > touchNextMillis) {
+          touchNextMillis = uint32_t (currentLoopMillis + 500);
+          if (_led->getPixelColor(2) > 0 ) { // first pixel is in a ring.
+            _led->colorFillAllRegions(_led->Color( OFF ));
+          } else {
+            _led->colorFillAllRegions(_led->Color( 0, 255/8, 0 ));
+          }
+        }
       break;
 
     case PLANT_INTIALLY_SELECTED:
-
       currentBrightness = maxBrightness;
       _led->setBrightness(currentBrightness);
-      _led->colorFillAll(_led->Color( WHITE ));
-      ledDelayMillis = 100 / 4; // MPF - WIP keep low to speed up development.
-      ledNextMillis = uint32_t(currentLoopMillis + ledDelayMillis);
+      _led->colorFillAll(_led->Color( GREEN ));
+      ledDelayMillis = 25; // MPF - WIP keep low to speed up development.
+      ledNextMillis = uint32_t (currentLoopMillis + ledDelayMillis);
       ledStartMillis = ledNextMillis;
 
       updateGameState(PLANT_INTIALLY_DIMMING_ALL);
@@ -309,17 +318,20 @@ void MigrationGame::checkGameStateMachine() {
 
       if (currentLoopMillis > ledNextMillis) {
         ledNextMillis = uint32_t(currentLoopMillis + ledDelayMillis);
-        currentBrightness = currentBrightness - (maxBrightness / 10);
+        currentBrightness = currentBrightness - (((maxBrightness / 20) < 2) ? 1 : (maxBrightness / 20));
         if (currentBrightness < 0) {
           currentBrightness = 0;
         }
-        _led->setBrightness(currentBrightness);
-        _led->show();
+        _led->colorFillAll(_led->Color( 0, currentBrightness, 0 ), false);
+        segment.startPos = (int) pgm_read_word(&ledSegs[(int) pgm_read_word(&plants[plant[0]].beginRingID)].startPos);
+        segment.endPos =   (int) pgm_read_word(&ledSegs[(int) pgm_read_word(&plants[plant[0]].beginRingID)].endPos);
+        _led->colorFillRange(_led->Color( 0, maxBrightness, 0 ), segment.startPos, segment.endPos, true);
       }
       if (currentBrightness <= 0) {
         currentBrightness = maxBrightness;;
         _led->setBrightness(currentBrightness);  // reset brightness for next use, but do not turn it on.
         updateGameState(PLANT_INTIALLY_DIMMING_ALL_FINISHED);
+
       }
       break;
 
@@ -334,11 +346,13 @@ void MigrationGame::checkGameStateMachine() {
       segment.startPos = (int) pgm_read_word(&ledSegs[(int) pgm_read_word(&plants[plant[0]].beginRingID)].startPos);
       segment.endPos =   (int) pgm_read_word(&ledSegs[(int) pgm_read_word(&plants[plant[0]].beginRingID)].endPos);
       _led->colorFillRange(_led->Color( GREEN ), segment.startPos, segment.endPos);
+      touchNextMillis = uint32_t (currentLoopMillis + touchTimeOutMillis);
 
       updateGameState(PLANT_ACCEPTED_WAITING_FOR_BUTTON);
       break;
 
     case PLANT_ACCEPTED_WAITING_FOR_BUTTON:
+
       if (prv_region != region[0]) {
         prv_region = region[0];
 
@@ -350,6 +364,25 @@ void MigrationGame::checkGameStateMachine() {
         } else {
           updateGameState(INCORRECT_REGION_SELECTED);
         }
+        
+        touchNextMillis = uint32_t (currentLoopMillis + touchTimeOutMillis);
+      }
+      else {
+        if (currentLoopMillis > touchNextMillis) {
+          if (hopPos > 0) {
+            _serial->println(F("gameState: touch timeout, restarting plant"));
+
+            // Clear prior history of selected Regions.
+            updateRegion(0); // set to initial value of None.
+
+            // Clear/Prime current Hop to 1st position.
+            hopPos = 0;
+            stepPos = 0;
+
+            _led->colorFillAll(_led->Color( OFF ), false);
+            updateGameState(PLANT_INTIAL_START_POSITION);
+          }
+        }
       }
       break;
 
@@ -359,6 +392,16 @@ void MigrationGame::checkGameStateMachine() {
 
       segment = _led->findRegionsLedRange(region[0]);
       _led->colorFillRange(_led->Color( RED ), segment.startPos, segment.endPos);
+      delay(125);
+      _led->colorFillRange(_led->Color( OFF ), segment.startPos, segment.endPos);
+      delay(125);
+      _led->colorFillRange(_led->Color( RED ), segment.startPos, segment.endPos);
+      delay(125);
+      _led->colorFillRange(_led->Color( OFF ), segment.startPos, segment.endPos);
+      delay(125);
+      _led->colorFillRange(_led->Color( RED ), segment.startPos, segment.endPos);
+      delay(125);
+      _led->colorFillRange(_led->Color( OFF ), segment.startPos, segment.endPos);
       updateGameState(PLANT_ACCEPTED_WAITING_FOR_BUTTON);
 
       break;
@@ -368,7 +411,7 @@ void MigrationGame::checkGameStateMachine() {
       _led->setBrightness(currentBrightness);
 
       // redraw prior migration, without incorrect selections.
-      redrawMigration(hopPos, _led->Color( WHITE ));
+      redrawMigration(hopPos);
 
       // illuminate all buttons associated with HopPos.
       for (int nButtonPos = 0; nButtonPos < SIZE_OF_NEXTBUTTONS; nButtonPos++) {
@@ -492,8 +535,8 @@ void MigrationGame::checkGameStateMachine() {
       break;
 
     case FINISHED_LINE_TO_REGION:
-
       hopPos++;
+      redrawMigration(hopPos);
       isThereAnextHop = !checkIfAtEndOfRegions();
 
       if (isThereAnextHop) {
@@ -505,17 +548,48 @@ void MigrationGame::checkGameStateMachine() {
 
       break;
 
-    case BEGIN_WIN: // MPF - WIP for testing.
+    case BEGIN_WIN:
+      flashCounter = 0;
+      touchNextMillis = uint32_t (currentLoopMillis + 250);
       updateGameState(END_WIN);
+      
       break;
 
-    case END_WIN: // MPF - WIP for testing.
-        redrawMigration();
+    case END_WIN:
+      if (flashCounter > ( 2 * 3 )) {
         updateGameState(WIN_IDLE);
+        touchNextMillis = uint32_t (currentLoopMillis + touchTimeOutMillis);
+      }    
+      else {
+        if (currentLoopMillis > touchNextMillis) {
+          flashCounter++;
+          touchNextMillis = uint32_t (currentLoopMillis + 250);
+          if (( flashCounter % 2 ) == 0) {
+            redrawMigration(SIZE_OF_HOPS, _led->Color( OFF ), _led->Color( OFF ));
+          } else {
+            redrawMigration(SIZE_OF_HOPS, _led->Color( GREEN ), _led->Color( GREEN ));
+          }
+        }
+      }
+
       break;
 
-    case WIN_IDLE: // MPF - WIP for testing.
-        // delay(1000);
+    case WIN_IDLE:
+      if (currentLoopMillis > touchNextMillis) {
+        _serial->println(F("gameState: Win Idle timeout, restarting plant"));
+
+        // Clear prior history of selected Regions.
+        updateRegion(0); // set to initial value of None.
+
+        // Clear/Prime current Hop to 1st position.
+        hopPos = 0;
+        stepPos = 0;
+
+        _led->colorFillAll(_led->Color( OFF ), false);
+        updateGameState(PLANT_INTIAL_START_POSITION);
+      }
+
+
       break;
 
     default:
@@ -526,7 +600,7 @@ void MigrationGame::checkGameStateMachine() {
 
 }
 
-void MigrationGame::redrawMigration(int currentHop, unsigned long segmentColor, unsigned long buttonColor) {
+void MigrationGame::redrawMigration(int currentHop, unsigned long segmentColor, unsigned long buttonColor, bool show = true) {
   LedSegments segment;
 
   segment.startPos = (int) pgm_read_word(&ledSegs[(int) pgm_read_word(&plants[plant[0]].beginRingID)].startPos);
@@ -588,5 +662,7 @@ void MigrationGame::redrawMigration(int currentHop, unsigned long segmentColor, 
       }
     }
   }
-  _led->show();
+  if ( show ) {
+    _led->show();
+  }
 }

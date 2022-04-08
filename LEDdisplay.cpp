@@ -38,17 +38,35 @@ void LEDdisplay::begin(int maxBrightness_) {
   setBrightness(maxBrightness_);
 }
 
-void LEDdisplay::colorFillRange(unsigned long color, int beginPos, int endPos) {
+void LEDdisplay::colorFillRange(unsigned long color, int beginPos, int endPos, bool show) {
 
   for (int pos = (beginPos - 1); pos < endPos; pos++) { // For each pixel in strip...
     Adafruit_NeoPixel::setPixelColor(pos, color);             //  Set pixel's color (in RAM)
   }
-  Adafruit_NeoPixel::show();                                  //  Update strip to match
+  if ( show ) {
+    Adafruit_NeoPixel::show();                                  //  Update strip to match
+  }
 }
 
-void LEDdisplay::colorFillAll(unsigned long color) {
+void LEDdisplay::colorFillAllRegions(unsigned long color, bool show = true) {
 
-  colorFillRange(color, (0 + 1), (Adafruit_NeoPixel::numPixels() + 1));
+  for (int idx = 0; idx < LENGTH_OF_ARRAY(ledSegs); idx++) {
+    Countries ledSegOffset = ((int) pgm_read_word(&ledSegs[idx].buttonID));
+    if (ledSegOffset != None) {
+      LedSegments segment;
+      segment.startPos = (int) pgm_read_word(&ledSegs[idx].startPos);
+      segment.endPos = (int) pgm_read_word(&ledSegs[idx].endPos);
+      colorFillRange(color, segment.startPos, segment.endPos, false);
+    }
+  }
+  if ( show ) {
+    Adafruit_NeoPixel::show();                                  //  Update strip to match
+  }
+}
+
+void LEDdisplay::colorFillAll(unsigned long color, bool show = true) {
+
+  colorFillRange(color, (0 + 1), (Adafruit_NeoPixel::numPixels() + 1), show);
 }
 
 LedSegments LEDdisplay::findRegionsLedRange(Countries region) {
