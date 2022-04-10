@@ -57,7 +57,7 @@ void setup()
   led = new LEDdisplay(lastLED, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
   led->begin(maxBrightness);
   
- if (maxBrightness > 255) {
+ if (maxBrightness < 255) {
    // then in Demo Lab 
     led->testAllLEDs(); // 1/4s for R, G and B.
  } 
@@ -66,19 +66,6 @@ void setup()
    led->colorFillAll(led->Color( WHITE ));
    delay(10000);
    led->colorFillAll(led->Color( OFF ));
-
-//    for (int pulse_counter = 0; pulse_counter < 3; pulse_counter++) {
-//      for (int bcolor = 127; bcolor <= 255; bcolor += 10) {
-//        //Serial.print("bcolor = "); Serial.println(bcolor);
-//        led->colorFillAllRegions(led->Color( 0, bcolor, 0 ));
-//      }
-//
-//      for (int bcolor = 255; bcolor > 127; bcolor -= 10) {
-//        //Serial.print("bcolor = "); Serial.println(bcolor);
-//        led->colorFillAllRegions(led->Color( 0, bcolor, 0 ));
-//      }
-//    }
-//    // delay(1000);
  }
  led->colorFillAll(led->Color( OFF ));
 

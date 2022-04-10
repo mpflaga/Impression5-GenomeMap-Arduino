@@ -391,17 +391,20 @@ void MigrationGame::checkGameStateMachine() {
       _led->setBrightness(currentBrightness);
 
       segment = _led->findRegionsLedRange(region[0]);
-      _led->colorFillRange(_led->Color( RED ), segment.startPos, segment.endPos);
-      delay(125);
-      _led->colorFillRange(_led->Color( OFF ), segment.startPos, segment.endPos);
-      delay(125);
-      _led->colorFillRange(_led->Color( RED ), segment.startPos, segment.endPos);
-      delay(125);
-      _led->colorFillRange(_led->Color( OFF ), segment.startPos, segment.endPos);
-      delay(125);
-      _led->colorFillRange(_led->Color( RED ), segment.startPos, segment.endPos);
-      delay(125);
-      _led->colorFillRange(_led->Color( OFF ), segment.startPos, segment.endPos);
+
+      if (( _led->getPixelColor(segment.startPos) & 0x0000FF00) == 0 ) {
+        _led->colorFillRange(_led->Color( RED ), segment.startPos, segment.endPos);
+        delay(125);
+        _led->colorFillRange(_led->Color( OFF ), segment.startPos, segment.endPos);
+        delay(125);
+        _led->colorFillRange(_led->Color( RED ), segment.startPos, segment.endPos);
+        delay(125);
+        _led->colorFillRange(_led->Color( OFF ), segment.startPos, segment.endPos);
+        delay(125);
+        _led->colorFillRange(_led->Color( RED ), segment.startPos, segment.endPos);
+        delay(125);
+        _led->colorFillRange(_led->Color( OFF ), segment.startPos, segment.endPos);
+      }
       updateGameState(PLANT_ACCEPTED_WAITING_FOR_BUTTON);
 
       break;
