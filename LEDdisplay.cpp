@@ -69,6 +69,20 @@ void LEDdisplay::colorFillAll(unsigned long color, bool show = true) {
   colorFillRange(color, (0 + 1), (Adafruit_NeoPixel::numPixels() + 1), show);
 }
 
+void LEDdisplay::removeAllColor(unsigned long color, bool show = true) {
+
+  for (int idx = 0; idx < Adafruit_NeoPixel::numPixels(); idx++) {
+    unsigned long colorRead = getPixelColor(idx);
+
+    if (( colorRead & color ) > 0 ) {
+      Adafruit_NeoPixel::setPixelColor(idx, (colorRead & ~color)); 
+    }
+  }
+  if ( show ) {
+    Adafruit_NeoPixel::show();
+  }
+}
+
 LedSegments LEDdisplay::findRegionsLedRange(Countries region) {
   LedSegments response = { 0, 0, None };
 

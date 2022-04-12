@@ -359,6 +359,8 @@ void MigrationGame::checkGameStateMachine() {
         bool correctRegion = checkIfMatchCurrentDesiredRegions(region[0]);
         _serial->printf("Region is %s\n", correctRegion ? "correct" : "incorrect");
 
+        _led->removeAllColor( _led->Color(RED), false );
+
         if (correctRegion) {
           updateGameState(CORRECT_REGION_SELECTED);
         } else {
@@ -387,29 +389,56 @@ void MigrationGame::checkGameStateMachine() {
       break;
 
     case INCORRECT_REGION_SELECTED:
+
       currentBrightness = maxBrightness;
       _led->setBrightness(currentBrightness);
-
       segment = _led->findRegionsLedRange(region[0]);
 
-      if (( _led->getPixelColor(segment.startPos) & 0x0000FF00) == 0 ) {
-        _led->colorFillRange(_led->Color( RED ), segment.startPos, segment.endPos);
-        delay(125);
-        _led->colorFillRange(_led->Color( OFF ), segment.startPos, segment.endPos);
-        delay(125);
-        _led->colorFillRange(_led->Color( RED ), segment.startPos, segment.endPos);
-        delay(125);
-        _led->colorFillRange(_led->Color( OFF ), segment.startPos, segment.endPos);
-        delay(125);
-        _led->colorFillRange(_led->Color( RED ), segment.startPos, segment.endPos);
-        delay(125);
-        _led->colorFillRange(_led->Color( OFF ), segment.startPos, segment.endPos);
+      if (( _led->getPixelColor(segment.startPos) & 0x0000FF00) != 0 ) {
+        updateGameState(PLANT_ACCEPTED_WAITING_FOR_BUTTON);
       }
-      updateGameState(PLANT_ACCEPTED_WAITING_FOR_BUTTON);
+      else {
+        flashCounter = 0;
+        ledDelayMillis = 125;
+        ledNextMillis = uint32_t(currentLoopMillis + ledDelayMillis);
+        ledStartMillis = ledNextMillis;
+        updateGameState(INCORRECT_REGION_FLASHING);
+      }
+
+      break;
+      
+    case INCORRECT_REGION_FLASHING:
+      
+      if (prv_region == region[0]) {
+        if (flashCounter > ( 2 * 3 )) {
+          updateGameState(PLANT_ACCEPTED_WAITING_FOR_BUTTON);
+        }
+        else {
+          if (currentLoopMillis > ledNextMillis) {
+            segment = _led->findRegionsLedRange(region[0]);
+            flashCounter++;
+
+            if (( flashCounter % 2 ) == 0) {
+              Serial.println(F("RED"));
+              _led->colorFillRange(_led->Color( RED ), segment.startPos, segment.endPos);
+            }
+            else {
+              Serial.println(F("OFF"));
+            _led->colorFillRange(_led->Color( OFF ), segment.startPos, segment.endPos);
+            }
+            ledNextMillis = uint32_t(currentLoopMillis + ledDelayMillis);
+          }
+        }
+      }
+      else {
+        updateGameState(PLANT_ACCEPTED_WAITING_FOR_BUTTON);
+      }
+
 
       break;
 
     case CORRECT_REGION_SELECTED:
+
       currentBrightness = maxBrightness;
       _led->setBrightness(currentBrightness);
 
