@@ -81,6 +81,8 @@ void setup()
   Serial1.begin(9600);
   RFid.begin(Serial1);
 
+  randomSeed(analogRead(8));
+
   // print build stat's.
   Serial.print(F("Build Date: ")); Serial.print(F(__DATE__)); Serial.print(F(" ")); Serial.println(F(__TIME__));
   Serial.print(F("Free RAM at end of setup() is = ")); Serial.println(freeMemory());

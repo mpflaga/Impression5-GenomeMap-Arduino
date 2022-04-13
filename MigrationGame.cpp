@@ -287,6 +287,7 @@ void MigrationGame::checkGameStateMachine() {
       _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
       _led->colorFillAll(_led->Color( OFF ));
       touchNextMillis = uint32_t (currentLoopMillis + 500);
+      flashCounter = 0;
       updateGameState(NO_PLANT_PRIMED);
       break;
 
@@ -294,11 +295,13 @@ void MigrationGame::checkGameStateMachine() {
         // do nothing and wait for external stimulus, such as button.
 
         if (currentLoopMillis > touchNextMillis) {
-          touchNextMillis = uint32_t (currentLoopMillis + 500);
-          if (_led->getPixelColor(2) > 0 ) { // first pixel is in a ring.
+            flashCounter++;
+          touchNextMillis = uint32_t (touchNextMillis + 500);
+          if (( flashCounter % 2 ) == 0) {
             _led->colorFillAllRegions(_led->Color( OFF ));
           } else {
-            _led->colorFillAllRegions(_led->Color( 0, 255/8, 0 ));
+            segment = _led->findRegionsLedRange(random(1, (SIZE_OF_REGIONS + 1)));
+            _led->colorFillRange(_led->Color( GREEN ), segment.startPos, segment.endPos);
           }
         }
       break;
