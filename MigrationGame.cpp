@@ -410,7 +410,7 @@ void MigrationGame::checkGameStateMachine() {
     case INCORRECT_REGION_FLASHING:
       
       if (prv_region == region[0]) {
-        if (flashCounter > ( 2 * 3 )) {
+        if (flashCounter > ( 2 * 3 ) + 1 ) {
           updateGameState(PLANT_ACCEPTED_WAITING_FOR_BUTTON);
         }
         else {
@@ -419,12 +419,12 @@ void MigrationGame::checkGameStateMachine() {
             flashCounter++;
 
             if (( flashCounter % 2 ) == 0) {
-              Serial.println(F("RED"));
-              _led->colorFillRange(_led->Color( RED ), segment.startPos, segment.endPos);
+              Serial.println(F("OFF"));
+              _led->colorFillRange(_led->Color( OFF ), segment.startPos, segment.endPos);
             }
             else {
-              Serial.println(F("OFF"));
-            _led->colorFillRange(_led->Color( OFF ), segment.startPos, segment.endPos);
+              Serial.println(F("RED"));
+              _led->colorFillRange(_led->Color( RED ), segment.startPos, segment.endPos);
             }
             ledNextMillis = uint32_t(currentLoopMillis + ledDelayMillis);
           }
