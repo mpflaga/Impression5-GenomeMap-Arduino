@@ -30,25 +30,25 @@ typedef struct {
 const mprs groups[] PROGMEM = {
   (mprs) {
     0x5A,
-    { 7,    8,    7,    7,    7,    7,    7,    17,    7,    7,    8,    7}, //tthresh
+    { 13,    13,    13,    13,    13,    13,    13,    13,    13,    13,    10,    13}, //tthresh
     { 4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4}, //rthresh
   //{        1,       4, 3, 4, 7,     6,          7,    8,     9,     7,    11,              12}, //identifier
     {AUSTRALIA, SE_ASIA, 0, 0, 0, INDIA, KAZAKHSTAN, ASIA, KOREA, JAPAN, CHINA, PACIFIC_ISLANDS}, //identifier
   },
   { 0x5B,
-    { 7,    7,    7,   13,    7,    7,    7,    7,    7,    7,    7,    7}, //tthresh
+    { 17,    13,    13,   13,    13,    12,    15,    13,    13,    13,    13,    16}, //tthresh
     { 4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4}, //rthresh
   //{13,   14,   15,   16,   17,   18,   19,   40,   41,   42,   43,   44}, //identifier
     {TURKEY, 0, 0, MADAGASCAR, EAST_AFRICA, AFRICA, WEST_AFRICA, MALI, 0, SPAIN, BRITISH_ISLES, EUROPE}, //identifier
   },
   { 0x5C,
-    { 7,    7,    7,    7,    7,    7,    9,    7,    7,    7,    7,    7}, //tthresh
+    { 13,    13,    13,    13,    13,    13,    13,    13,    13,    16,    13,    13}, //tthresh
     { 4,    4,    4,    4,    4,    4,    5,    4,    4,    4,    4,    4}, //rthresh
   //{25,   46,   47,   48,   49,   30,   31,   32,   33,   34,   35,   36}, //identifier
     {BOLIVIA_PERU, W_SOUTH_AMERICA, PANAMA, CARIBBEAN, 0, CANADA, NEW_ENGLAND, 0, 0, BRAZIL, 0, CHILE}, //identifier
   },
   { 0x5D,
-    { 7,    7,    7,    7,    7,    7,    7,    7,    7,    7,    7,    7}, //tthresh
+    { 13,    13,    13,    13,    13,    13,    13,    13,    13,    13,    13,    13}, //tthresh
     { 4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4}, //rthresh
   //{37,   38,   39,   40,   41,   42,   43,   44,   45,   46,   47,   48}, //identifier
     {0, 0, 0, 0, CALIFORNIA, ARIZONA_NEW_MEXICO, E_NORTH_AMERICA, 0, MEXICO, 0, SOUTH_CAROLINA, 0}, //identifier
