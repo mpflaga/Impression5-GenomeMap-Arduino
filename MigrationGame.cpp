@@ -320,7 +320,7 @@ void MigrationGame::checkGameStateMachine() {
     case PLANT_INTIALLY_DIMMING_ALL:
 
       if (currentLoopMillis > ledNextMillis) {
-        ledNextMillis = uint32_t(currentLoopMillis + ledDelayMillis);
+        ledNextMillis = uint32_t(ledNextMillis + ledDelayMillis);
         currentBrightness = currentBrightness - (((maxBrightness / 20) < 2) ? 1 : (maxBrightness / 20));
         if (currentBrightness < 0) {
           currentBrightness = 0;
@@ -429,7 +429,7 @@ void MigrationGame::checkGameStateMachine() {
               Serial.println(F("RED"));
               _led->colorFillRange(_led->Color( RED ), segment.startPos, segment.endPos);
             }
-            ledNextMillis = uint32_t(currentLoopMillis + ledDelayMillis);
+            ledNextMillis = uint32_t(ledNextMillis + ledDelayMillis);
           }
         }
       }
@@ -536,7 +536,7 @@ void MigrationGame::checkGameStateMachine() {
     case LOOP_EACH_LED:
 
       if (currentLoopMillis > ledNextMillis) {
-        ledNextMillis = uint32_t(currentLoopMillis + ledDelayMillis);
+        ledNextMillis = uint32_t(ledNextMillis + ledDelayMillis);
 
         _led->setPixelColor(ledpos, _led->Color( WHITE ));
         _led->show();
@@ -593,12 +593,12 @@ void MigrationGame::checkGameStateMachine() {
     case END_WIN:
       if (flashCounter > ( 2 * 3 )) {
         updateGameState(WIN_IDLE);
-        touchNextMillis = uint32_t (currentLoopMillis + touchTimeOutMillis);
+        touchNextMillis = uint32_t (touchNextMillis + touchTimeOutMillis);
       }    
       else {
         if (currentLoopMillis > touchNextMillis) {
           flashCounter++;
-          touchNextMillis = uint32_t (currentLoopMillis + 250);
+          touchNextMillis = uint32_t (touchNextMillis + 250);
           if (( flashCounter % 2 ) == 0) {
             redrawMigration(SIZE_OF_HOPS, _led->Color( OFF ), _led->Color( OFF ));
           } else {
