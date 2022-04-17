@@ -55,5 +55,11 @@ static const RFidStruct RFtags[] PROGMEM = {
   { "5000E24A9A62", 7},
   { "5000E20E55E9", 7},
   { "5000E2586A80", 7},
-  { "6000615B7228", 7}
+  { "6000615B7228", 7},
+  
+  // Service Card
+  { "0002FDDE0425",  8}, // Test all RED LEDs
+  { "0002FB10AA43",  9}, // Test all GREEN LEDs
+  { "0002FDEFD6C6", 10}, // Test all BLUE LEDs
+  { "0002FDE1657B", 11}  // Do Nothing, TBD.
 };

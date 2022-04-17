@@ -98,7 +98,12 @@ void MigrationGame::printPlants() {
 void MigrationGame::printPlantHistory() {
   _serial->println(F("History of Plants selected:"));
   for (int idx = (LENGTH_OF_ARRAY(plant) - 1); idx >= 0 ; idx--) {
-    _serial->printf("  plant[%d] = %p(%d)\n", idx, plants[plant[idx]].plantName, plant[idx]);
+    if (( -1 < plant[idx] ) && ( plant[idx] < SIZE_OF_PLANTS )) {
+      _serial->printf("  plant[%d] = %p(%d)\n", idx, plants[plant[idx]].plantName, plant[idx]);
+    }
+    else {
+      _serial->printf("  plant[%d] = id# %d\n", idx, plant[idx]);
+    }
   }
 }
 
@@ -191,10 +196,21 @@ bool MigrationGame::updatePlant(int newPlant) {
       gameState[idx] = gameState[idx - 1];
     }
     // set statemachine corspondingly to PLANT_INTIALLY_SELECTED or NO_PLANT_SELECTED
-    if (plant[0] > 0) {
+    if (( 0 < plant[0] ) && ( plant[0] < SIZE_OF_PLANTS )) {
       gameState[0] = PLANT_INTIALLY_SELECTED;
-    } else {
+    } else if (plant[0] == 0 ) {
+      // if not legitimate plant, set to No Plant. Such as with Diag Cards.
       gameState[0] = NO_PLANT_SELECTED;
+    } else if (plant[0] == 8 ) {
+      gameState[0] = TEST_ALL_RED;
+    } else if (plant[0] == 9 ) {
+      gameState[0] = TEST_ALL_GREEN;
+    } else if (plant[0] == 10 ) {
+      gameState[0] = TEST_ALL_BLUE;
+    }
+    else {
+      // if not legitimate plant, set to No Plant. Such as with Diag Cards.
+      gameState[0] = GAME_STOP;
     }
 
     bResult = true;
@@ -624,9 +640,25 @@ void MigrationGame::checkGameStateMachine() {
         updateGameState(PLANT_INTIAL_START_POSITION);
       }
 
-
       break;
 
+    case TEST_ALL_RED:
+      _led->colorFillAll(_led->Color( RED ), true);
+ 
+      break;
+      
+    case TEST_ALL_GREEN:
+      _led->colorFillAll(_led->Color( GREEN ), true);
+      break;
+      
+    case TEST_ALL_BLUE:
+      _led->colorFillAll(_led->Color( BLUE ), true);
+      break;
+      
+    case GAME_STOP:
+      // do nothing while game is disabled. 
+      break;
+      
     default:
       _serial->printf("Entering State of gameState[0] = '%d'(%p)\n", gameState[0], stateStr[gameState[0]]);
 

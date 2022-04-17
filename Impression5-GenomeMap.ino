@@ -103,7 +103,8 @@ void loop()
   if ( RFid.available() ) {
     int nextPlantIdx = RFid.read();
     Serial.print(F("Detected Card ID = ")); Serial.println(nextPlantIdx);
-    if (nextPlantIdx > -1) {
+    Serial.print(F("SIZE_OF_PLANTS = ")); Serial.println(SIZE_OF_PLANTS);
+    if (( -1 < nextPlantIdx ) && (nextPlantIdx < SIZE_OF_PLANTS)) {
       if (game->updatePlant(nextPlantIdx)) {
         // when a different plant, update settings
         Serial.println(F("Plant Updated."));
@@ -113,9 +114,13 @@ void loop()
         Serial.println(F("No Change in Plant."));
       }
     }
-    else {
+    else if ( nextPlantIdx < 1 ) {
       nextPlantIdx = 0;
       Serial.println(F("Plant Card Removed."));
+      game->updatePlant(nextPlantIdx);
+    }
+    else if (( -1 < nextPlantIdx ) && ( nextPlantIdx >= SIZE_OF_PLANTS )) {
+      Serial.print(F("Diagnostic Card Detected = ")); Serial.println(nextPlantIdx);
       game->updatePlant(nextPlantIdx);
     }
     Serial.print(F("Changed plant to ")); Serial.println(nextPlantIdx);
@@ -194,7 +199,14 @@ String getConsole() {
       for (int idx = 0; idx < LENGTH_OF_ARRAY(game->gameState); idx++) {
         serial.printf("  gameState[%d]  = '%p'(%d)\n", idx, stateStr[game->gameState[idx]], game->gameState[idx]);
       }
-      serial.printf("  plant[%d] = %p(%d)\n", 0, plants[game->plant[0]].plantName, game->plant[0]);
+      
+      if (( -1 < game->plant[0] ) && ( game->plant[0] < SIZE_OF_PLANTS )) {
+        serial.printf("  plant[%d] = %p(%d)\n", 0, plants[game->plant[0]].plantName, game->plant[0]);
+      }
+      else {
+        serial.printf("  plant[%d] = id# %d\n", 0, game->plant[0]);
+      }      
+      
       Serial.print(F("Free RAM = ")); Serial.println(freeMemory());
       Serial.print(F("RFid.average = ")); Serial.println(RFid.average);
       Serial.print(F("RFid.threshold = ")); Serial.println(RFid.threshold);

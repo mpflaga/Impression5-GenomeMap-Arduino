@@ -37,7 +37,11 @@ typedef enum  {
   BEGIN_WIN,
   END_WIN,
   WIN_IDLE,
-  FINISHED_LINE_TO_REGION
+  FINISHED_LINE_TO_REGION,
+  GAME_STOP,
+  TEST_ALL_RED,
+  TEST_ALL_GREEN,
+  TEST_ALL_BLUE
 } state_m; //enum state_m
 
 static const char stateStr[][42] PROGMEM = {
@@ -61,7 +65,11 @@ static const char stateStr[][42] PROGMEM = {
   "BEGIN_WIN",
   "END_WIN",
   "WIN_IDLE",
-  "FINISHED_LINE_TO_REGION"
+  "FINISHED_LINE_TO_REGION",
+  "GAME_STOP",
+  "TEST_ALL_RED",
+  "TEST_ALL_GREEN",
+  "TEST_ALL_BLUE"
 };
 
 class MigrationGame {
