@@ -8,6 +8,8 @@ static const RFidStruct RFtags[] PROGMEM = {
   // something else.
   { "0C00296BC18F", 0},
 
+  // Plants
+
   // Potato
   { "5000E23935BE", 1},
   { "5000E1E4F5A0", 1},
@@ -58,8 +60,20 @@ static const RFidStruct RFtags[] PROGMEM = {
   { "6000615B7228", 7},
   
   // Service Card
-  { "0002FDDE0425",  8}, // Test all RED LEDs
-  { "0002FB10AA43",  9}, // Test all GREEN LEDs
-  { "0002FDEFD6C6", 10}, // Test all BLUE LEDs
-  { "0002FDE1657B", 11}  // Do Nothing, TBD.
+  
+  // Test all RED LEDs
+  { "0002FDDE0425",  8}, 
+  { "600077B7C363",  8},
+  { "6000794E5F08",  8},
+  
+  // Test all GREEN LEDs
+  { "0002FB10AA43",  9},
+  { "6000793B6644",  9},
+  { "600061E142A2",  9},
+  
+  // Test all BLUE LEDs
+  { "0002FDEFD6C6", 10},
+  { "600079265C63", 10},
+  { "6000792EB087", 10},
+  { "0002FDE1657B", 11} 
 };
