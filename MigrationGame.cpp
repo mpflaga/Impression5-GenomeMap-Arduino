@@ -198,19 +198,24 @@ bool MigrationGame::updatePlant(int newPlant) {
     // set statemachine corspondingly to PLANT_INTIALLY_SELECTED or NO_PLANT_SELECTED
     if (( 0 < plant[0] ) && ( plant[0] < SIZE_OF_PLANTS )) {
       gameState[0] = PLANT_INTIALLY_SELECTED;
-    } else if (plant[0] == 0 ) {
+    } 
+    else if (plant[0] == 0 ) {
       // if not legitimate plant, set to No Plant. Such as with Diag Cards.
-      gameState[0] = NO_PLANT_SELECTED;
-    } else if (plant[0] == 8 ) {
-      gameState[0] = TEST_ALL_RED;
-    } else if (plant[0] == 9 ) {
-      gameState[0] = TEST_ALL_GREEN;
-    } else if (plant[0] == 10 ) {
-      gameState[0] = TEST_ALL_BLUE;
+      updateGameState(NO_PLANT_SELECTED);
+    } 
+    else if (plant[0] == 8 ) {
+      updateGameState(TEST_ALL_RED);
+    } 
+    else if (plant[0] == 9 ) {
+      updateGameState(TEST_ALL_GREEN);
+    } 
+    else if (plant[0] == 10 ) {
+      updateGameState(TEST_ALL_BLUE);
     }
     else {
       // if not legitimate plant, set to No Plant. Such as with Diag Cards.
-      gameState[0] = GAME_STOP;
+      updateGameState(GAME_STOP);
+      _led->colorFillAll(_led->Color( OFF ));
     }
 
     bResult = true;
