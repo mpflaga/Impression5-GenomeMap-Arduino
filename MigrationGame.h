@@ -82,8 +82,10 @@ class MigrationGame {
     uint32_t ledNextMillis;
     uint32_t ledStartMillis;
     uint32_t ledDelayMillis;
+    uint32_t delayBetweenSegLEDsMillis;
     uint32_t touchNextMillis;
     uint32_t touchTimeOutMillis = 60000;
+    int lengthOfSegment = 0;
     bool reverse;
     int ledSegPos;
     int ledpos;
@@ -122,6 +124,7 @@ class MigrationGame {
     bool checkIfAtEndOfRegions();
     void checkGameStateMachine();
     void redrawMigration(int currentHop = SIZE_OF_HOPS, unsigned long segmentColor = LEDdisplay::Color( GREEN ), unsigned long buttonColor = LEDdisplay::Color( GREEN ), bool show = true);
+    int loopThurAllSegmentsOfHop( int hop, unsigned long segmentColor, bool justCount = false );
 };
 
 #endif  // MigrationGame_h

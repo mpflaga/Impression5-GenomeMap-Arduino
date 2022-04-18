@@ -487,6 +487,12 @@ void MigrationGame::checkGameStateMachine() {
       printCurrentDesiredRegion();
       stepPos = 0;
       updateGameState(DRAWING_LINE_TO_REGION);
+        lengthOfSegment = loopThurAllSegmentsOfHop( hopPos, _led->Color( OFF ), false );
+        delayBetweenSegLEDsMillis = ( 1000 / lengthOfSegment );
+        if ( delayBetweenSegLEDsMillis > 100 ) {
+          // don't let it go too slow
+          delayBetweenSegLEDsMillis = 100;
+        }
 
       break;
 
@@ -541,8 +547,7 @@ void MigrationGame::checkGameStateMachine() {
       _serial->println(Serial.read());
 #endif // pause between each segement.
 
-      ledDelayMillis = 10 / 5; // MPF - WIP keep low to speed up development.
-      ledNextMillis = uint32_t(currentLoopMillis + ledDelayMillis);
+      ledNextMillis = uint32_t(currentLoopMillis + 0);
       ledStartMillis = ledNextMillis;
 
       updateGameState(LOOP_EACH_LED);
@@ -552,23 +557,27 @@ void MigrationGame::checkGameStateMachine() {
     case LOOP_EACH_LED:
 
       if (currentLoopMillis > ledNextMillis) {
-        ledNextMillis = uint32_t(ledNextMillis + ledDelayMillis);
+        uint32_t prvLedNextMillis = ledNextMillis; 
+        ledNextMillis = uint32_t(ledNextMillis + delayBetweenSegLEDsMillis);
 
-        _led->setPixelColor(ledpos, _led->Color( WHITE ));
+        for (int i = 0; i < (delayBetweenSegLEDsMillis < 30 ? (30 / delayBetweenSegLEDsMillis) : 1 ); i++) {
+          _led->setPixelColor(ledpos, _led->Color( WHITE ));
+
+          if (reverse) {
+            ledpos--;
+          } else {
+            ledpos++;
+          }
+          if (reverse && (ledpos >= endPos)) {
+            // updateGameState(LOOP_EACH_LED);
+          } else if (!reverse && (ledpos <= endPos)) {
+            // updateGameState(LOOP_EACH_LED);
+          } else {
+            updateGameState(FINISHED_SEGMENT);
+            break;
+          }
+        }
         _led->show();
-
-        if (reverse) {
-          ledpos--;
-        } else {
-          ledpos++;
-        }
-        if (reverse && (ledpos >= endPos)) {
-          // updateGameState(LOOP_EACH_LED);
-        } else if (!reverse && (ledpos <= endPos)) {
-          // updateGameState(LOOP_EACH_LED);
-        } else {
-          updateGameState(FINISHED_SEGMENT);
-        }
       }
 
       break;
@@ -667,8 +676,9 @@ void MigrationGame::checkGameStateMachine() {
 
 }
 
-void MigrationGame::redrawMigration(int currentHop, unsigned long segmentColor, unsigned long buttonColor, bool show = true) {
+void MigrationGame::redrawMigration(int currentHop, unsigned long segmentColor, unsigned long buttonColor, bool show) {
   LedSegments segment;
+  int length = 0;
 
   segment.startPos = (int) pgm_read_word(&ledSegs[(int) pgm_read_word(&plants[plant[0]].beginRingID)].startPos);
   segment.endPos =   (int) pgm_read_word(&ledSegs[(int) pgm_read_word(&plants[plant[0]].beginRingID)].endPos);
@@ -699,37 +709,52 @@ void MigrationGame::redrawMigration(int currentHop, unsigned long segmentColor, 
         }
       }
 
-      // loop thru all the segments between buttons.
-      for (int nStepPos = 0; nStepPos < SIZE_OF_STEPS; nStepPos++) {
-        int ledSegPos = (int) pgm_read_word(&plants[plant[0]].hops[hop].steps[nStepPos]);
-        if (ledSegPos != 0) {
-          bool reverse = false;
-
-          if (ledSegPos > SIZE_OF_LEDSEGS) {
-            reverse = true;
-            ledSegPos -= SIZE_OF_LEDSEGS;
-          }
-          int endPos = 0;
-          int startPos = 0;
-
-          if (reverse) {
-            startPos = (int) pgm_read_word(&ledSegs[ledSegPos].endPos);
-            endPos = (int) pgm_read_word(&ledSegs[ledSegPos].startPos);
-            for (int ledpos = startPos; ledpos >= endPos; ledpos--) {
-              _led->setPixelColor(ledpos - 1, segmentColor);
-            }
-          } else {
-            startPos = (int) pgm_read_word(&ledSegs[ledSegPos].startPos);
-            endPos = (int) pgm_read_word(&ledSegs[ledSegPos].endPos);
-            for (int ledpos = startPos; ledpos <= endPos; ledpos++) {
-              _led->setPixelColor(ledpos - 1, segmentColor);
-            }
-          }
-        }
-      }
+      length += loopThurAllSegmentsOfHop( hop, segmentColor );
     }
   }
   if ( show ) {
     _led->show();
   }
+}
+
+int MigrationGame::loopThurAllSegmentsOfHop( int hop, unsigned long segmentColor, bool justCount ) {
+  int length = 0;
+  int LEDcounter = 0;
+  
+  for (int nStepPos = 0; nStepPos < SIZE_OF_STEPS; nStepPos++) {
+    int ledSegPos = (int) pgm_read_word(&plants[plant[0]].hops[hop].steps[nStepPos]);
+    if (ledSegPos != 0) {
+      bool reverse = false;
+
+      if (ledSegPos > SIZE_OF_LEDSEGS) {
+        reverse = true;
+        ledSegPos -= SIZE_OF_LEDSEGS;
+      }
+      int endPos = 0;
+      int startPos = 0;
+
+      if (reverse) {
+        startPos = (int) pgm_read_word(&ledSegs[ledSegPos].endPos);
+        endPos = (int) pgm_read_word(&ledSegs[ledSegPos].startPos);
+        length = length + (( startPos + 1 )- endPos);
+        if ( !justCount) {
+          for (int ledpos = startPos; ledpos >= endPos; ledpos--) {
+            _led->setPixelColor(ledpos - 1, segmentColor);
+            LEDcounter++;
+          }
+        }
+      } else {
+        startPos = (int) pgm_read_word(&ledSegs[ledSegPos].startPos);
+        endPos = (int) pgm_read_word(&ledSegs[ledSegPos].endPos);
+        length = length + (( endPos + 1 ) - startPos);
+        if ( !justCount) {
+          for (int ledpos = startPos; ledpos <= endPos; ledpos++) {
+            _led->setPixelColor(ledpos - 1, segmentColor);
+            LEDcounter++;
+          }
+        }
+      }
+    }
+  }  
+  return length ;
 }
