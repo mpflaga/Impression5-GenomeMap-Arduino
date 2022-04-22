@@ -658,15 +658,17 @@ void MigrationGame::checkGameStateMachine() {
 
     case TEST_ALL_RED:
       _led->colorFillAll(_led->Color( RED ), true);
- 
+      updateGameState(GAME_STOP);
       break;
       
     case TEST_ALL_GREEN:
       _led->colorFillAll(_led->Color( GREEN ), true);
+      updateGameState(GAME_STOP);
       break;
       
     case TEST_ALL_BLUE:
       _led->colorFillAll(_led->Color( BLUE ), true);
+      updateGameState(GAME_STOP);
       break;
       
     case GAME_STOP:

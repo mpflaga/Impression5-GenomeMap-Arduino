@@ -65,6 +65,8 @@ class tpad : public MPR121_type {
     int scan();
     int interruptPin;
     int singleTouchOnly = 0; // 1 = No multi-touches allowed.
+    uint8_t getTouchThreshold( uint8_t chipIdx, uint8_t electrodeIdx);
+    uint8_t getReleaseThreshold( uint8_t chipIdx, uint8_t electrodeIdx);
 
   private:
     MPR121_type chips[SIZE_OF_CHIPS];

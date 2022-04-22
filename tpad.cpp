@@ -116,3 +116,13 @@ int tpad::scan() {
   }
   return identifier;
 }
+
+uint8_t tpad::getTouchThreshold( uint8_t addr, uint8_t electrode) {
+
+  return chips[addr].getTouchThreshold( electrode );
+}
+
+uint8_t tpad::getReleaseThreshold( uint8_t addr, uint8_t electrode) {
+
+  return chips[addr].getReleaseThreshold( electrode );
+}

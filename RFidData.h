@@ -75,5 +75,7 @@ static const RFidStruct RFtags[] PROGMEM = {
   { "0002FDEFD6C6", 10},
   { "600079265C63", 10},
   { "6000792EB087", 10},
+  
+  // show Touch Thresholds
   { "0002FDE1657B", 11} 
 };

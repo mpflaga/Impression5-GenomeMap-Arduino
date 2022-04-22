@@ -134,6 +134,51 @@ void loop()
   }
 
   game->checkGameStateMachine();
+  
+  if ( game->gameState[0] == GAME_STOP ) {
+
+    // MPF - WIP, need to add 1 second updates delays. 
+    // then draw Ring to match tthresh
+    // thne move to class function.
+
+    Serial.print("GAME_STOP: ");
+    if ( game->plant[0] == 11 ) {
+      //led->colorFillAllRegions( led->Color( YELLOW ) );
+      Serial.println( "Thouch Threshold " );
+
+
+      for (int idx = 0; idx < LENGTH_OF_ARRAY(ledSegs); idx++) {
+        Countries ledSegOffset = ((int) pgm_read_word(&ledSegs[idx].buttonID));
+        if (ledSegOffset != None) {
+          LedSegments segment;
+          segment.startPos = (int) pgm_read_word(&ledSegs[idx].startPos);
+          segment.endPos = (int) pgm_read_word(&ledSegs[idx].endPos);
+          led->colorFillRange( led->Color( YELLOW ), segment.startPos, segment.endPos, false);
+        }
+      }
+      led->show();
+
+      for (int touchIdx = 0; touchIdx < ( SIZE_OF_CHIPS * numElectrodes ); touchIdx++) {
+        uint8_t chipIdx = touchIdx / numElectrodes;
+        uint8_t electrodeIdx = touchIdx % numElectrodes;
+        
+        Serial.print( "touchIdx = " );Serial.print( touchIdx );
+        Serial.print( " touchIdx / numElectrodes = " );Serial.print( chipIdx );
+        Serial.print( " touchIdx % numElectrodes = " );Serial.print( electrodeIdx );
+        
+        uint8_t tthresh = tpad.getTouchThreshold(chipIdx, electrodeIdx);
+        Serial.print( " tthresh = " );Serial.print( tthresh );
+        uint8_t rthresh = tpad.getReleaseThreshold(chipIdx, electrodeIdx);
+        Serial.print( " rthresh = " );Serial.print( rthresh );
+
+        
+        Serial.println();
+      }
+
+    }
+    Serial.println();
+  }
+  
 }
 
 String getConsole() {
